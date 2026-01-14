@@ -25,6 +25,17 @@ class Segment:
     @memo
     def segment(self, text):
         "Return a list of words that is the best segmentation of text."
+        
+        text = re.sub(r'(?<=\D)(?=\d)|(?<=\d)(?=\D)', ' ', text)
+        if ' ' in text:
+            out = []
+            for t in text.split():
+                if t.isdigit():
+                    out.append(t)
+                else:
+                    out.extend(self.segment(t))
+            return out
+        
         if not text: return []
         candidates = ([first]+self.segment(rem) for first,rem in self.splits(text))
         return max(candidates, key=self.Pwords)
@@ -36,7 +47,8 @@ class Segment:
 
     def Pwords(self, words): 
         "The Naive Bayes probability of a sequence of words."
-        return product(self.Pw(w) for w in words)
+        #return product(self.Pw(w) for w in words)
+        return sum(log10(self.Pw(w)) for w in words)
 
 #### Support functions (p. 224)
 
@@ -50,7 +62,9 @@ class Pdist(dict):
         for key,count in data:
             self[key] = self.get(key, 0) + int(count)
         self.N = float(N or sum(self.values()))
-        self.missingfn = missingfn or (lambda k, N: 1./N)
+        #self.missingfn = missingfn or (lambda k, N: 1./N)
+        self.missingfn = missingfn or (lambda k, N: 1.0/(N * (10 ** len(k)))) #try 5, 7, 10, 15
+
     def __call__(self, key): 
         if key in self: return self[key]/self.N  
         else: return self.missingfn(key, self.N)
@@ -61,6 +75,7 @@ def datafile(name, sep='\t'):
         for line in fh:
             (key, value) = line.split(sep)
             yield (key, value)
+
 
 if __name__ == '__main__':
     optparser = optparse.OptionParser()
