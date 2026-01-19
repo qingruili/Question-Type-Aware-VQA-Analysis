@@ -151,7 +151,12 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# Zip files (for submitting assignments)
 *.zip
+
+# DS_Store files
+.DS_Store
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
