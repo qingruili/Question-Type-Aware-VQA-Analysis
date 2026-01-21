@@ -1,0 +1,9 @@
+Device set to use mps:0
+Traceback (most recent call last):
+  File "/Users/xuefeiyang/Documents/NLP/nlpclass-1261-g-curious-minds/hw1/answer/spellchk.py", line 105, in <module>
+    for (locations, spellchk_sent) in spellchk(f, analysis_mode):
+                                      ~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/xuefeiyang/Documents/NLP/nlpclass-1261-g-curious-minds/hw1/answer/spellchk.py", line 72, in spellchk
+    ground_truth_word = ground_truth_sentences[sentence_index][i]
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range

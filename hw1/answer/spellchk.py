@@ -16,8 +16,19 @@ def get_typo_locations(fh):
         )
 
 def select_correction(typo, predict):
-    # return the most likely prediction for the mask token
-    return predict[0]['token_str']
+    # Select the word with minimum edit distance from all predictions
+    min_edit_dist = float('inf')
+    best_word = predict[0]['token_str']  # fallback to top prediction
+    
+    for pred in predict:
+        word = pred['token_str']
+        edit_dist = textdistance.damerau_levenshtein(typo.lower(), word.lower())
+        
+        if edit_dist < min_edit_dist:
+            min_edit_dist = edit_dist
+            best_word = word
+    
+    return best_word
 
 def analyze_predictions(typo, predict, analysis_file, sent, typo_index, ground_truth_word):
     """
@@ -47,10 +58,34 @@ def analyze_predictions(typo, predict, analysis_file, sent, typo_index, ground_t
             f"{i+1:<6}{word:<15}{score:<12.6f}{edit_dist:<12}{marker}\n"
         )
 
+def write_ground_truth_scores(typo, predict, scores_writer, ground_truth_word, sentence_num, typo_index):
+    """
+    Write ground truth word's scores to scores.csv file in CSV format.
+    """
+    # Find ground truth in predictions
+    transformer_score = "N/A"
+    rank = "N/A"
+    
+    for i, pred in enumerate(predict):
+        if pred['token_str'].lower() == ground_truth_word.lower():
+            transformer_score = f"{pred['score']:.6f}"
+            rank = str(i + 1)
+            break
+    
+    # Calculate edit distance between typo and ground truth
+    edit_dist = textdistance.damerau_levenshtein(typo.lower(), ground_truth_word.lower())
+    
+    # Write to scores file using csv writer (handles commas properly)
+    scores_writer.writerow([typo, ground_truth_word, transformer_score, rank, edit_dist])
+
 def spellchk(fh, analysis_mode=None):
-    # If analysis mode is enabled, open analysis file and read ground truth
+    # If analysis mode is enabled, open analysis files and read ground truth
     if analysis_mode:
-        analysis_file = open('analysis.txt', 'w')
+        analysis_file = open('output/analysis.txt', 'w')
+        scores_file = open('output/scores.csv', 'w', newline='')
+        scores_writer = csv.writer(scores_file)
+        scores_writer.writerow(['Typo', 'Ground_Truth', 'Transformer_Score', 'Rank', 'Edit_Distance'])
+        
         reference_file = os.path.join('data', 'reference', 'dev.out')
         with open(reference_file) as ref_f:
             ground_truth_sentences = [line.strip().split() for line in ref_f]
@@ -61,9 +96,10 @@ def spellchk(fh, analysis_mode=None):
         
         for i in locations:
             # predict top_k replacements only for the typo word at index i
+            # Increased top_k to 50 to capture more candidates
             predict = fill_mask(
                 " ".join([ sent[j] if j != i else mask for j in range(len(sent)) ]), 
-                top_k=20
+                top_k=100
             )
             logging.info(predict)
             
@@ -71,6 +107,8 @@ def spellchk(fh, analysis_mode=None):
             if analysis_mode:
                 ground_truth_word = ground_truth_sentences[sentence_index][i]
                 analyze_predictions(sent[i], predict, analysis_file, sent, i, ground_truth_word)
+                write_ground_truth_scores(sent[i], predict, scores_writer, ground_truth_word, 
+                                        sentence_index, i)
             
             spellchk_sent[i] = select_correction(sent[i], predict)
         
@@ -79,9 +117,10 @@ def spellchk(fh, analysis_mode=None):
         
         yield(locations, spellchk_sent)
     
-    # Close analysis file if it was opened
+    # Close analysis files if they were opened
     if analysis_mode:
         analysis_file.close()
+        scores_file.close()
 
 if __name__ == '__main__':
     import argparse
@@ -99,7 +138,7 @@ if __name__ == '__main__':
     if opts.logfile is not None:
         logging.basicConfig(filename=opts.logfile, filemode='w', level=logging.DEBUG)
 
-    analysis_mode = False
+    analysis_mode = True  # Set to True to enable analysis mode
 
     with open(opts.input) as f:
         for (locations, spellchk_sent) in spellchk(f, analysis_mode):

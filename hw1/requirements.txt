@@ -9,3 +9,5 @@ torch
 transformers
 pylev
 textdistance
+pandas
+numpy
