@@ -70,7 +70,7 @@ def edit_distance_leq_k(a, b, k=2):
 
     return prev[n] <= k
 
-def select_correction(typo, predict, k=1):
+def select_correction(typo, predict, k=2):
     """
     A: best_sim = max SequenceMatcher similarity to typo
     B: best_edlm = among candidates with edit distance <= k, pick highest LM score
