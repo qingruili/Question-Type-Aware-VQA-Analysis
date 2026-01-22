@@ -15,6 +15,16 @@ def get_typo_locations(fh):
             line[1].split()
         )
 
+
+def edit_distance(a, b):
+    """
+    Calculate the Damerau-Levenshtein edit distance
+    TODO: Implement edit distance manually if textdistance is not allowed
+    """
+    a, b = a.lower(), b.lower()
+    return textdistance.damerau_levenshtein(a, b)
+
+
 def select_correction(typo, predict):
     # Select the word with minimum edit distance from all predictions
     min_edit_dist = float('inf')
@@ -22,11 +32,14 @@ def select_correction(typo, predict):
     
     for pred in predict:
         word = pred['token_str']
-        edit_dist = textdistance.damerau_levenshtein(typo.lower(), word.lower())
+        edit_dist = edit_distance(typo, word)
         
         if edit_dist < min_edit_dist:
             min_edit_dist = edit_dist
             best_word = word
+
+    if typo and typo[0].isupper():
+        best_word = best_word.capitalize()
     
     return best_word
 
