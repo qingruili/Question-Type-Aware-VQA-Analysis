@@ -181,7 +181,7 @@ def spellchk(fh, analysis_mode=None):
             # MODIFIED: Increased top_k from 20 to 100 to capture more candidates
             predict = fill_mask(
                 " ".join([ sent[j] if j != i else mask for j in range(len(sent)) ]), 
-                top_k=100
+                top_k=200
             )
             logging.info(predict)
             
