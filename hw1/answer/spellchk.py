@@ -15,35 +15,13 @@ def get_typo_locations(fh):
             line[1].split()
         )
 
-#def select_correction(typo, predict):
-    # return the most likely prediction for the mask token
-    #return predict[0]['token_str']
-    #return max(predict, key=lambda p: SequenceMatcher(None, typo.lower(), p['token_str']).ratio())['token_str']
-'''
-def select_correction(typo, predict):
-    # Score by similarity minus length penalty
-    def score(p):
-        sim = SequenceMatcher(None, typo.lower(), p['token_str']).ratio()
-        len_penalty = abs(len(typo) - len(p['token_str'])) * 0.05
-        return sim - len_penalty
-    
-    best = max(predict, key=score)['token_str']
-    
-    # Preserve capitalization (for start of sentence, after quotes "", after dashes --)
-    if typo[0].isupper():
-        best = best.capitalize()
-    
-    return best
-'''
-
-def edit_distance_leq_k(a, b, k=2):
-    """Return True if Levenshtein edit distance(a,b) <= k."""
+def edit_distance(a, b):
+    """Return the exact Levenshtein edit distance between a and b."""
     a, b = a.lower(), b.lower()
     if a == b:
-        return True
-    if abs(len(a) - len(b)) > k:
-        return False
-
+        return 0
+    
+    # Ensure a is the shorter string for space optimization
     if len(a) > len(b):
         a, b = b, a
 
@@ -52,36 +30,38 @@ def edit_distance_leq_k(a, b, k=2):
 
     for i in range(1, m + 1):
         cur = [i] + [0] * n
-        # Track row minimum for early exit
-        row_min = cur[0]
         ai = a[i - 1]
         for j in range(1, n + 1):
             cost = 0 if ai == b[j - 1] else 1
             cur[j] = min(
-                prev[j] + 1,      # delete
-                cur[j - 1] + 1,   # insert
-                prev[j - 1] + cost# substitute
+                prev[j] + 1,       # delete
+                cur[j - 1] + 1,    # insert
+                prev[j - 1] + cost # substitute
             )
-            if cur[j] < row_min:
-                row_min = cur[j]
-        if row_min > k:
-            return False
         prev = cur
 
-    return prev[n] <= k
+    return prev[n]
 
-def select_correction(typo, predict, k=2):
+
+def select_correction(typo, predict, k=2, ed_weight=0.45, sim_weight=0.45, lm_weight=0.1):
     """
-    A: best_sim = max SequenceMatcher similarity to typo
-    B: best_edlm = among candidates with edit distance <= k, pick highest LM score
-                 (fallback: if none within k, pick highest LM score overall)
-
-    Final choice: whichever of (best_sim, best_edlm) is MORE similar to typo
-                  using (1) smaller edit distance, then (2) higher SequenceMatcher.
+    Select the best correction using a weighted combination of:
+    - SequenceMatcher similarity (sim_weight)
+    - Transformer/LM score (lm_weight)
+    
+    Args:
+        typo: The misspelled word
+        predict: List of predictions with 'token_str' and 'score'
+        k: Maximum edit distance allowed
+        sim_weight: Weight for SequenceMatcher similarity (0-1)
+        lm_weight: Weight for transformer score (0-1)
+    
+    Returns:
+        Best correction string
     """
     typo_l = typo.lower()
 
-    # normalize candidates: (cand_str, lm_score)
+    # Normalize candidates: (cand_str, lm_score)
     cands = []
     for p in predict:
         cand = p["token_str"].strip()
@@ -91,47 +71,44 @@ def select_correction(typo, predict, k=2):
     if not cands:
         return typo
 
-    # A) Most similar by SequenceMatcher
+    # Helper: SequenceMatcher ratio
     def sm_ratio(c):
         return SequenceMatcher(None, typo_l, c.lower()).ratio()
 
-    best_sim = max(cands, key=lambda x: sm_ratio(x[0]))[0]
+    # Filter candidates: edit distance >= 1 (must be different) and <= k
+    valid_cands = []
+    for c, s in cands:
+        ed = edit_distance(typo_l, c.lower())
+        if 1 <= ed <= k:
+            valid_cands.append((c, s, ed))
+    
+    # Fallback: if no valid candidates, use all candidates with ed >= 1
+    if not valid_cands:
+        for c, s in cands:
+            ed = edit_distance(typo_l, c.lower())
+            if ed >= 1:
+                valid_cands.append((c, s, ed))
+    
+    # If still no candidates (all are identical to typo), return typo
+    if not valid_cands:
+        return typo
 
-    # B) Best LM among candidates within edit distance <= k
-    close = [(c, s) for (c, s) in cands if edit_distance_leq_k(typo_l, c.lower(), k=k)]
-    if close:
-        best_edlm = max(close, key=lambda x: x[1])[0]
-    else:
-        best_edlm = max(cands, key=lambda x: x[1])[0]  # fallback to most plausible
+    # Calculate combined score for each candidate
+    def combined_score(cand_tuple):
+        c, lm_score, ed = cand_tuple
+        similarity = sm_ratio(c)
+        
+        # Normalize edit distance to 0-1 scale (closer = higher score)
+        # Using 1 / (1 + ed) so smaller distance = higher score
+        ed_score = 1 / ed
+        
+        # Combine similarity and edit distance into one similarity measure
+        
+        # Final weighted score
+        return (ed_weight * ed_score)+(sim_weight * similarity ) + (lm_weight * lm_score)
 
-    # Compare which is closer to original typo
-    # Primary: edit distance (we compute exact small distances with DP if you want,
-    # but for simplicity we reuse the <=k checker by trying k=0..maxK.)
-    def exact_lev(a, b):
-        # full Levenshtein (only used twice, cheap)
-        a, b = a.lower(), b.lower()
-        m, n = len(a), len(b)
-        dp = list(range(n + 1))
-        for i in range(1, m + 1):
-            prev_diag = dp[0]
-            dp[0] = i
-            for j in range(1, n + 1):
-                tmp = dp[j]
-                cost = 0 if a[i-1] == b[j-1] else 1
-                dp[j] = min(dp[j] + 1, dp[j-1] + 1, prev_diag + cost)
-                prev_diag = tmp
-        return dp[n]
-
-    ed_sim  = exact_lev(typo_l, best_sim.lower())
-    ed_edlm = exact_lev(typo_l, best_edlm.lower())
-
-    if ed_edlm < ed_sim:
-        best = best_edlm
-    elif ed_sim < ed_edlm:
-        best = best_sim
-    else:
-        # tie -> higher SequenceMatcher
-        best = best_edlm if sm_ratio(best_edlm) > sm_ratio(best_sim) else best_sim
+    # Select best candidate by combined score
+    best = max(valid_cands, key=combined_score)[0]
 
     # Preserve capitalization
     if typo and typo[0].isupper():
@@ -147,7 +124,7 @@ def spellchk(fh):
             # predict top_k replacements only for the typo word at index i
             predict = fill_mask(
                 " ".join([ sent[j] if j != i else mask for j in range(len(sent)) ]), 
-                top_k=100
+                top_k=200
             )
             logging.info(predict)
             spellchk_sent[i] = select_correction(sent[i], predict)
