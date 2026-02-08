@@ -1,0 +1,6 @@
+1. missing_spelling: missing_spelling.png
+2. missing_spelling + add learning_rate (2adam): learning_rate.png
+3. missing_spelling + add learning_rate (1 adam 1 sgd): sgd.png
+4. missing_spelling + add learning_rate + freeze: freeze.png
+5. missing_spelling + Improving the classification head + learning_rate (2adam): linear_class.png
+5. missing_spelling + Improving the classification head + learning_rate (2adam): sgd_class.png

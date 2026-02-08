@@ -1,4 +1,7 @@
+import random
 import os, sys, argparse, gzip, re, logging
+from numpy import rint
+from collections import Counter
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -52,19 +55,30 @@ class TransformerModel(nn.Module):
     def init_model_from_scratch(self, basemodel, tagset_size, lr):
         self.encoder = AutoModel.from_pretrained(basemodel)
         self.encoder_hidden_dim = self.encoder.config.hidden_size
-        self.classification_head = nn.Linear(self.encoder_hidden_dim, tagset_size)
+        #self.classification_head = nn.Linear(self.encoder_hidden_dim, tagset_size)
+        self.dropout = nn.Dropout(p=0.1)
+        self.lin1 = nn.Linear(self.encoder_hidden_dim, self.encoder_hidden_dim * 4)  # 768 → 3072
+        self.lin2 = nn.Linear(self.encoder_hidden_dim * 4, self.encoder_hidden_dim)  # 3072 → 768
+        self.classification_head = nn.Linear(self.encoder_hidden_dim, tagset_size)   # 768 → 22
         # TODO initialize self.crf_layer in here as well.
         # TODO modify the optimizers in a way that each model part is optimized with a proper learning rate!
+        
         self.optimizers = [
-            optim.Adam(
-                list(self.encoder.parameters()) + list(self.classification_head.parameters()),
-                lr=lr
-            )
+            optim.Adam(self.encoder.parameters(), lr=lr),                       
+            #optim.Adam(self.classification_head.parameters(), lr=lr * 2)
+            optim.SGD(self.classification_head.parameters(),  
+              lr=0.1, momentum=0.9)        
         ]
 
     def forward(self, sentence_input):
-        encoded = self.encoder(sentence_input).last_hidden_state
-        tag_space = self.classification_head(encoded)
+        #encoded = self.encoder(sentence_input).last_hidden_state
+        outputs = self.encoder(sentence_input, output_hidden_states=True)
+        hidden_states = outputs.hidden_states[-4:]  # Last 4 layers
+        encoded = torch.stack(hidden_states, dim=0).mean(dim=0)  # Average them
+        x = self.dropout(encoded)
+        x = F.relu(self.lin1(x))
+        x = F.relu(self.lin2(x))
+        tag_space = self.classification_head(x  )
         tag_scores = F.log_softmax(tag_space, dim=-1)
         # TODO modify the tag_scores to use the parameters of the crf_layer
         return tag_scores
@@ -95,6 +109,27 @@ class FinetuneTagger:
         self.ix_to_tag = []  # during inference we produce tag indices so we have to map it back to a tag
         self.model = None # setup the model in self.decode() or self.train()
 
+    # Add Function: Deal with missspellings
+    def add_typo(self, word):
+        """Add random typo to a word."""
+        if len(word) < 3 or random.random() > 0.5:
+            return word
+        operations = ['substitute', 'delete', 'insert', 'swap']
+        operation = random.choice(operations)
+        word_list = list(word)
+        idx = random.randint(0, len(word) - 1)
+    
+        if operation == 'substitute':
+            word_list[idx] = random.choice('abcdefghijklmnopqrstuvwxyz')
+        elif operation == 'delete' and len(word) > 3:
+            del word_list[idx]
+        elif operation == 'insert':
+            word_list.insert(idx, random.choice('abcdefghijklmnopqrstuvwxyz'))
+        elif operation == 'swap' and idx < len(word) - 1:
+            word_list[idx], word_list[idx+1] = word_list[idx+1], word_list[idx]
+    
+        return ''.join(word_list)
+    
     def load_training_data(self, trainfile):
         if trainfile[-3:] == '.gz':
             with gzip.open(trainfile, 'rt') as f:
@@ -163,6 +198,11 @@ class FinetuneTagger:
                 # understanding about BPE subword vocabulary creation technique).
                 # The expected labels will be copied as many times as the size of the subwords list for each word and
                 # returned in targets label.
+
+                if random.random() < 0.35:
+                    tokenized_sentence = tuple(self.add_typo(word) for word in tokenized_sentence)
+
+    
                 batch.append(self.prepare_sequence(tokenized_sentence, tags))
                 if len(batch) < self.batchsize:
                     continue
