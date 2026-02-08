@@ -6,7 +6,6 @@ import torch.optim as optim
 from transformers import AutoTokenizer, AutoModel
 import tqdm
 import random
-import numpy as np
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -79,7 +78,7 @@ class TransformerModel(nn.Module):
     def forward(self, sentence_input):
         #encoded = self.encoder(sentence_input).last_hidden_state
         outputs = self.encoder(sentence_input, output_hidden_states=True)
-        hidden_states = outputs.hidden_states[-4:] 
+        hidden_states = outputs.hidden_states[-2:] 
         encoded = torch.stack(hidden_states, dim=0).mean(dim=0)  # Average them
         x = self.dropout(encoded)
         x = F.relu(self.lin1(x))
@@ -185,11 +184,6 @@ class FinetuneTagger:
         return output
 
     def train(self):
-        random.seed(42)
-        np.random.seed(42)
-        torch.manual_seed(42)
-        torch.cuda.manual_seed_all(42)
-
         self.load_training_data(self.trainfile)
         self.model = TransformerModel(self.basemodel, len(self.tag_to_ix), lr=self.lr).to(device)
         # TODO You may want to set the weights in the following line to increase the effect of
@@ -240,8 +234,6 @@ class FinetuneTagger:
                 loss.backward()
                 # TODO you may want to freeze the BERT encoder for a couple of epochs
                 #   and then start performing full fine-tuning.
-                
-                torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
                 for optimizer in self.model.optimizers:
                     optimizer.step()
                 # HINT: getting the value of loss below 2.0 might mean your model is moving in the right direction!
