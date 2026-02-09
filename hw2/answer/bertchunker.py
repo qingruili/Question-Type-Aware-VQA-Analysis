@@ -119,7 +119,7 @@ class FinetuneTagger:
      # Add Function: Deal with missspellings
     def add_typo(self, word):
         """Add random typo to a word."""
-        if len(word) < 3 or random.random() > 0.5:
+        if len(word) < 3 or random.random() > 0.2:
             return word
         operations = ['substitute', 'delete', 'insert', 'swap']
         operation = random.choice(operations)
@@ -211,8 +211,7 @@ class FinetuneTagger:
                 # The expected labels will be copied as many times as the size of the subwords list for each word and
                 # returned in targets label.
 
-                if random.random() < 0.35:
-                    tokenized_sentence = tuple(self.add_typo(word) for word in tokenized_sentence)
+                tokenized_sentence = tuple(self.add_typo(word) for word in tokenized_sentence)
 
 
                 batch.append(self.prepare_sequence(tokenized_sentence, tags))
