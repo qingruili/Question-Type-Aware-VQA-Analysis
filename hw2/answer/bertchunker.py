@@ -191,15 +191,15 @@ class TransformerModel(nn.Module):
         ]
 
     def forward(self, sentence_input):
-        encoded = self.encoder(sentence_input).last_hidden_state
+        #encoded = self.encoder(sentence_input).last_hidden_state
 
         # =============================================
         #   Improvement 4: Use the last 4 hidden layers of the BERT encoder and average them to get a better representation for each subword
         # =============================================
 
-        #outputs = self.encoder(sentence_input, output_hidden_states=True)
-        #hidden_states = outputs.hidden_states[-4:] 
-        #encoded = torch.stack(hidden_states, dim=0).mean(dim=0)  # Average them
+        outputs = self.encoder(sentence_input, output_hidden_states=True)
+        hidden_states = outputs.hidden_states[-4:] 
+        encoded = torch.stack(hidden_states, dim=0).mean(dim=0)  # Average them
 
         # ======= Improvement 2 =======
         x = self.dropout(encoded)
