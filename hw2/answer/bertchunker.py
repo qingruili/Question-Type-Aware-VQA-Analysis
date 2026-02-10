@@ -10,6 +10,11 @@ import numpy as np
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+random.seed(42)
+np.random.seed(42)
+torch.manual_seed(42)
+torch.cuda.manual_seed_all(42)
+
 def read_conll(handle, input_idx=0, label_idx=2):
     conll_data = []
     contents = re.sub(r'\n\s*\n', r'\n\n', handle.read())
@@ -25,6 +30,60 @@ def read_conll(handle, input_idx=0, label_idx=2):
             conll_data.append(( annotations[input_idx], annotations[label_idx] ))
             logging.info("CoNLL: {} ||| {}".format( " ".join(annotations[input_idx]), " ".join(annotations[label_idx])))
     return conll_data
+
+
+# =============================================
+# Improvement 1: Data Augmentation with Noise Injection
+# =============================================
+
+def corrupt_word(word, corruption_prob=0.2):
+    """
+    Apply a random corruption to a word.
+    corruption_prob: probability of applying each corruption type
+    """
+    if len(word) <= 2:
+        return word
+    word_list = list(word)
+    
+    # 4 corruption types (from OLD - better variety)
+    corruption_type = random.choice(['swap', 'delete', 'insert', 'substitute'])
+    
+    if corruption_type == 'swap' and len(word_list) >= 2:
+        # Swap adjacent characters
+        i = random.randint(0, len(word_list) - 2)
+        word_list[i], word_list[i + 1] = word_list[i + 1], word_list[i]
+    
+    elif corruption_type == 'delete' and len(word) >= 2:
+        # Delete a character
+        i = random.randint(0, len(word_list) - 1)
+        del word_list[i]
+    
+    elif corruption_type == 'insert' and len(word) >= 2:
+        # Insert random character (from OLD - more realistic)
+        i = random.randint(0, len(word_list) - 1)
+        word_list.insert(i, random.choice('abcdefghijklmnopqrstuvwxyz'))
+    
+    elif corruption_type == 'substitute' and len(word) >= 2:
+        # Substitute with random character (from OLD - important!)
+        i = random.randint(0, len(word_list) - 1)
+        word_list[i] = random.choice('abcdefghijklmnopqrstuvwxyz')
+    
+    return ''.join(word_list)
+
+def add_noise_to_sentence(sentence, word_noise_prob=0.35):
+    """
+    Add noise to a sentence by corrupting words with given probability.
+    sentence: tuple of words (e.g., ('The', 'cat', 'sat'))
+    word_noise_prob: probability of corrupting each word
+    Returns: tuple of (possibly corrupted) words
+    """
+    noisy_sentence = []
+    for word in sentence:
+        if random.random() < word_noise_prob:
+            noisy_sentence.append(corrupt_word(word))
+        else:
+            noisy_sentence.append(word)
+    return tuple(noisy_sentence)
 
 
 class TransformerModel(nn.Module):
@@ -54,41 +113,56 @@ class TransformerModel(nn.Module):
     def init_model_from_scratch(self, basemodel, tagset_size, lr):
         self.encoder = AutoModel.from_pretrained(basemodel)
         self.encoder_hidden_dim = self.encoder.config.hidden_size
-        #self.classification_head = nn.Linear(self.encoder_hidden_dim, tagset_size)
+       
+        # =============================================
+        #   Improvement 2: Add an MLP layer before the classification head
+        # =============================================
         self.dropout = nn.Dropout(p=0.1)
-        self.lin1 = nn.Linear(self.encoder_hidden_dim, self.encoder_hidden_dim * 4)  # 768 → 3072
-        self.lin2 = nn.Linear(self.encoder_hidden_dim * 4, self.encoder_hidden_dim)  # 3072 → 768
-        self.classification_head = nn.Linear(self.encoder_hidden_dim, tagset_size)   # 768 → 22
+        self.lin1 = nn.Linear(self.encoder_hidden_dim, self.encoder_hidden_dim * 4)  
+        self.lin2 = nn.Linear(self.encoder_hidden_dim * 4, self.encoder_hidden_dim)  
+        self.classification_head = nn.Linear(self.encoder_hidden_dim, tagset_size)   
+
         # TODO initialize self.crf_layer in here as well.
         # TODO modify the optimizers in a way that each model part is optimized with a proper learning rate!
-        head_params = list(self.lin1.parameters()) + list(self.lin2.parameters()) + list(self.classification_head.parameters())
 
+        #self.optimizers = [
+            #optim.Adam(
+                #list(self.encoder.parameters()) + list(self.classification_head.parameters()),
+                #lr=lr
+            #)
+        #]
+
+        # =============================================
+        #   Improvement 3: Use different learning rates for the encoder and the classification head
+        # =============================================
+
+        head_params = list(self.lin1.parameters()) + list(self.lin2.parameters()) + list(self.classification_head.parameters())
         self.optimizers = [
             optim.Adam(self.encoder.parameters(), lr=lr),
-            optim.SGD(head_params, lr=0.1, momentum=0.9),
-    ]
-        '''
-        self.optimizers = [
-            optim.Adam(self.encoder.parameters(), lr=lr),                       
-            #optim.Adam(self.classification_head.parameters(), lr=lr * 2)
-            optim.SGD(self.classification_head.parameters(),  
-              lr=0.1, momentum=0.9)        
+            #optim.Adam(head_params, lr=lr * 2),
+            optim.SGD(head_params, lr=0.01, momentum=0.9),
         ]
-        '''
 
     def forward(self, sentence_input):
-        #encoded = self.encoder(sentence_input).last_hidden_state
-        outputs = self.encoder(sentence_input, output_hidden_states=True)
-        hidden_states = outputs.hidden_states[-4:] 
-        encoded = torch.stack(hidden_states, dim=0).mean(dim=0)  # Average them
+        encoded = self.encoder(sentence_input).last_hidden_state
+
+        # =============================================
+        #   Improvement 4: Use the last 4 hidden layers of the BERT encoder and average them to get a better representation for each subword
+        # =============================================
+
+        #outputs = self.encoder(sentence_input, output_hidden_states=True)
+        #hidden_states = outputs.hidden_states[-4:] 
+        #encoded = torch.stack(hidden_states, dim=0).mean(dim=0)  # Average them
+
+        # ======= Improvement 2 =======
         x = self.dropout(encoded)
         x = F.relu(self.lin1(x))
         x = F.relu(self.lin2(x))
-        tag_space = self.classification_head(x  )
+
+        tag_space = self.classification_head(x)
         tag_scores = F.log_softmax(tag_space, dim=-1)
         # TODO modify the tag_scores to use the parameters of the crf_layer
         return tag_scores
-
 
 class FinetuneTagger:
 
@@ -115,27 +189,6 @@ class FinetuneTagger:
         self.tag_to_ix = {}  # replace output labels / tags with an index
         self.ix_to_tag = []  # during inference we produce tag indices so we have to map it back to a tag
         self.model = None # setup the model in self.decode() or self.train()
-    
-     # Add Function: Deal with missspellings
-    def add_typo(self, word):
-        """Add random typo to a word."""
-        if len(word) < 3 or random.random() > 0.2:
-            return word
-        operations = ['substitute', 'delete', 'insert', 'swap']
-        operation = random.choice(operations)
-        word_list = list(word)
-        idx = random.randint(0, len(word) - 1)
-    
-        if operation == 'substitute':
-            word_list[idx] = random.choice('abcdefghijklmnopqrstuvwxyz')
-        elif operation == 'delete' and len(word) > 3:
-            del word_list[idx]
-        elif operation == 'insert':
-            word_list.insert(idx, random.choice('abcdefghijklmnopqrstuvwxyz'))
-        elif operation == 'swap' and idx < len(word) - 1:
-            word_list[idx], word_list[idx+1] = word_list[idx+1], word_list[idx]
-    
-        return ''.join(word_list)
 
     def load_training_data(self, trainfile):
         if trainfile[-3:] == '.gz':
@@ -185,11 +238,6 @@ class FinetuneTagger:
         return output
 
     def train(self):
-        random.seed(42)
-        np.random.seed(42)
-        torch.manual_seed(42)
-        torch.cuda.manual_seed_all(42)
-
         self.load_training_data(self.trainfile)
         self.model = TransformerModel(self.basemodel, len(self.tag_to_ix), lr=self.lr).to(device)
         # TODO You may want to set the weights in the following line to increase the effect of
@@ -202,6 +250,15 @@ class FinetuneTagger:
         for epoch in range(self.epochs):
             train_iterator = tqdm.tqdm(self.training_data)
             batch = []
+
+            # ======= Improvement 1 =======
+            augmented_data = []
+            for sentence, tags in self.training_data:
+                augmented_data.append((sentence, tags))  # Original
+                augmented_data.append((add_noise_to_sentence(sentence), tags))  # Noisy copy
+            random.shuffle(augmented_data)  # Shuffle to mix original and noisy
+            train_iterator = tqdm.tqdm(augmented_data)
+
             for tokenized_sentence, tags in train_iterator:
                 # Step 1. Get our inputs ready for the network, that is, turn them into
                 # Tensors of subword indices. Pre-trained transformer based models come with their fixed
@@ -210,10 +267,6 @@ class FinetuneTagger:
                 # understanding about BPE subword vocabulary creation technique).
                 # The expected labels will be copied as many times as the size of the subwords list for each word and
                 # returned in targets label.
-
-                tokenized_sentence = tuple(self.add_typo(word) for word in tokenized_sentence)
-
-
                 batch.append(self.prepare_sequence(tokenized_sentence, tags))
                 if len(batch) < self.batchsize:
                     continue
@@ -239,8 +292,6 @@ class FinetuneTagger:
                 loss.backward()
                 # TODO you may want to freeze the BERT encoder for a couple of epochs
                 #   and then start performing full fine-tuning.
-                
-                torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
                 for optimizer in self.model.optimizers:
                     optimizer.step()
                 # HINT: getting the value of loss below 2.0 might mean your model is moving in the right direction!
