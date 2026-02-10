@@ -1,4 +1,4 @@
-import os, sys, argparse, gzip, re, logging
+import os, sys, argparse, gzip, re, logging, random
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -7,6 +7,7 @@ from transformers import AutoTokenizer, AutoModel
 import tqdm
 import random
 import numpy as np
+
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -31,6 +32,52 @@ def read_conll(handle, input_idx=0, label_idx=2):
             logging.info("CoNLL: {} ||| {}".format( " ".join(annotations[input_idx]), " ".join(annotations[label_idx])))
     return conll_data
 
+# =============================================
+# Improvement 1: Data Augmentation with Noise Injection
+# =============================================
+
+def corrupt_word(word, corruption_prob=0.15):
+    """
+    Apply a random corruption to a word.
+    corruption_prob: probability of applying each corruption type
+    """
+    if len(word) <= 2:
+        return word  # Don't corrupt very short words (1-2 chars)
+    
+    word = list(word)
+    corruption_type = random.choice(['swap', 'delete', 'insert'])
+    
+    if corruption_type == 'swap' and len(word) >= 2:
+        # Swap two adjacent characters
+        i = random.randint(0, len(word) - 2)
+        word[i], word[i + 1] = word[i + 1], word[i]
+    
+    elif corruption_type == 'delete' and len(word) >= 2:
+        # Delete a random character
+        i = random.randint(0, len(word) - 1)
+        del word[i]
+    
+    elif corruption_type == 'insert':
+        # Duplicate a random character
+        i = random.randint(0, len(word) - 1)
+        word.insert(i, word[i])
+    
+    return ''.join(word)
+
+def add_noise_to_sentence(sentence, word_noise_prob=0.15):
+    """
+    Add noise to a sentence by corrupting words with given probability.
+    sentence: tuple of words (e.g., ('The', 'cat', 'sat'))
+    word_noise_prob: probability of corrupting each word
+    Returns: tuple of (possibly corrupted) words
+    """
+    noisy_sentence = []
+    for word in sentence:
+        if random.random() < word_noise_prob:
+            noisy_sentence.append(corrupt_word(word))
+        else:
+            noisy_sentence.append(word)
+    return tuple(noisy_sentence)
 
 # =============================================
 # Improvement 1: Data Augmentation with Noise Injection
@@ -248,7 +295,47 @@ class FinetuneTagger:
         total_loss = 0
         loss_count = 0
         for epoch in range(self.epochs):
-            train_iterator = tqdm.tqdm(self.training_data)
+
+            # ======= Improvement 1 =======
+            # Create augmented training data: original + noisy copies
+            augmented_data = []
+            for sentence, tags in self.training_data:
+                augmented_data.append((sentence, tags))  # Original
+                augmented_data.append((add_noise_to_sentence(sentence), tags))  # Noisy copy
+            random.shuffle(augmented_data)  # Shuffle to mix original and noisy
+
+            # Debug: Print data augmentation statistics
+            if epoch == 0:  # Only print on first epoch
+                print(f"\n===== Data Augmentation Stats =====", file=sys.stderr)
+                print(f"Original training data: {len(self.training_data)} sentences", file=sys.stderr)
+                print(f"Augmented training data: {len(augmented_data)} sentences", file=sys.stderr)
+                print(f"Added {len(augmented_data) - len(self.training_data)} noisy copies", file=sys.stderr)
+                
+                # Print 3 examples of original vs noisy with highlighted changes
+                print(f"\n===== Sample Augmentations =====", file=sys.stderr)
+                for i in range(min(3, len(self.training_data))):
+                    original = self.training_data[i][0]
+                    noisy = add_noise_to_sentence(original)
+                    
+                    print(f"\nExample {i+1}:", file=sys.stderr)
+                    print(f"  Original: {' '.join(original)}", file=sys.stderr)
+                    print(f"  Noisy:    {' '.join(noisy)}", file=sys.stderr)
+                    
+                    # Show which words changed
+                    changes = []
+                    for j, (orig_word, noisy_word) in enumerate(zip(original, noisy)):
+                        if orig_word != noisy_word:
+                            changes.append(f"'{orig_word}' -> '{noisy_word}'")
+                    
+                    if changes:
+                        print(f"  Changed:  {', '.join(changes)}", file=sys.stderr)
+                    else:
+                        print(f"  Changed:  (no changes in this sentence)", file=sys.stderr)
+                
+                print(f"================================\n", file=sys.stderr)
+            
+            train_iterator = tqdm.tqdm(augmented_data)
+
             batch = []
 
             # ======= Improvement 1 =======
