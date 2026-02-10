@@ -5,9 +5,16 @@ import torch.nn.functional as F
 import torch.optim as optim
 from transformers import AutoTokenizer, AutoModel
 import tqdm
+import random
+import numpy as np
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+random.seed(42)
+np.random.seed(42)
+torch.manual_seed(42)
+torch.cuda.manual_seed_all(42)
 
 def read_conll(handle, input_idx=0, label_idx=2):
     conll_data = []
@@ -72,6 +79,60 @@ def add_noise_to_sentence(sentence, word_noise_prob=0.15):
             noisy_sentence.append(word)
     return tuple(noisy_sentence)
 
+# =============================================
+# Improvement 1: Data Augmentation with Noise Injection
+# =============================================
+
+def corrupt_word(word, corruption_prob=0.2):
+    """
+    Apply a random corruption to a word.
+    corruption_prob: probability of applying each corruption type
+    """
+    if len(word) <= 2:
+        return word
+    word_list = list(word)
+    
+    # 4 corruption types (from OLD - better variety)
+    corruption_type = random.choice(['swap', 'delete', 'insert', 'substitute'])
+    
+    if corruption_type == 'swap' and len(word_list) >= 2:
+        # Swap adjacent characters
+        i = random.randint(0, len(word_list) - 2)
+        word_list[i], word_list[i + 1] = word_list[i + 1], word_list[i]
+    
+    elif corruption_type == 'delete' and len(word) >= 2:
+        # Delete a character
+        i = random.randint(0, len(word_list) - 1)
+        del word_list[i]
+    
+    elif corruption_type == 'insert' and len(word) >= 2:
+        # Insert random character (from OLD - more realistic)
+        i = random.randint(0, len(word_list) - 1)
+        word_list.insert(i, random.choice('abcdefghijklmnopqrstuvwxyz'))
+    
+    elif corruption_type == 'substitute' and len(word) >= 2:
+        # Substitute with random character (from OLD - important!)
+        i = random.randint(0, len(word_list) - 1)
+        word_list[i] = random.choice('abcdefghijklmnopqrstuvwxyz')
+    
+    return ''.join(word_list)
+
+def add_noise_to_sentence(sentence, word_noise_prob=0.35):
+    """
+    Add noise to a sentence by corrupting words with given probability.
+    sentence: tuple of words (e.g., ('The', 'cat', 'sat'))
+    word_noise_prob: probability of corrupting each word
+    Returns: tuple of (possibly corrupted) words
+    """
+    noisy_sentence = []
+    for word in sentence:
+        if random.random() < word_noise_prob:
+            noisy_sentence.append(corrupt_word(word))
+        else:
+            noisy_sentence.append(word)
+    return tuple(noisy_sentence)
+
+
 class TransformerModel(nn.Module):
 
     def __init__(
@@ -99,19 +160,53 @@ class TransformerModel(nn.Module):
     def init_model_from_scratch(self, basemodel, tagset_size, lr):
         self.encoder = AutoModel.from_pretrained(basemodel)
         self.encoder_hidden_dim = self.encoder.config.hidden_size
-        self.classification_head = nn.Linear(self.encoder_hidden_dim, tagset_size)
+       
+        # =============================================
+        #   Improvement 2: Add an MLP layer before the classification head
+        # =============================================
+        self.dropout = nn.Dropout(p=0.1)
+        self.lin1 = nn.Linear(self.encoder_hidden_dim, self.encoder_hidden_dim * 4)  
+        self.lin2 = nn.Linear(self.encoder_hidden_dim * 4, self.encoder_hidden_dim)  
+        self.classification_head = nn.Linear(self.encoder_hidden_dim, tagset_size)   
+
         # TODO initialize self.crf_layer in here as well.
         # TODO modify the optimizers in a way that each model part is optimized with a proper learning rate!
+
+        #self.optimizers = [
+            #optim.Adam(
+                #list(self.encoder.parameters()) + list(self.classification_head.parameters()),
+                #lr=lr
+            #)
+        #]
+
+        # =============================================
+        #   Improvement 3: Use different learning rates for the encoder and the classification head
+        # =============================================
+
+        head_params = list(self.lin1.parameters()) + list(self.lin2.parameters()) + list(self.classification_head.parameters())
         self.optimizers = [
-            optim.Adam(
-                list(self.encoder.parameters()) + list(self.classification_head.parameters()),
-                lr=lr
-            )
+            optim.Adam(self.encoder.parameters(), lr=lr),
+            #optim.Adam(head_params, lr=lr * 2),
+            optim.SGD(head_params, lr=0.01, momentum=0.9),
         ]
 
     def forward(self, sentence_input):
         encoded = self.encoder(sentence_input).last_hidden_state
-        tag_space = self.classification_head(encoded)
+
+        # =============================================
+        #   Improvement 4: Use the last 4 hidden layers of the BERT encoder and average them to get a better representation for each subword
+        # =============================================
+
+        #outputs = self.encoder(sentence_input, output_hidden_states=True)
+        #hidden_states = outputs.hidden_states[-4:] 
+        #encoded = torch.stack(hidden_states, dim=0).mean(dim=0)  # Average them
+
+        # ======= Improvement 2 =======
+        x = self.dropout(encoded)
+        x = F.relu(self.lin1(x))
+        x = F.relu(self.lin2(x))
+
+        tag_space = self.classification_head(x)
         tag_scores = F.log_softmax(tag_space, dim=-1)
         # TODO modify the tag_scores to use the parameters of the crf_layer
         return tag_scores
@@ -242,6 +337,15 @@ class FinetuneTagger:
             train_iterator = tqdm.tqdm(augmented_data)
 
             batch = []
+
+            # ======= Improvement 1 =======
+            augmented_data = []
+            for sentence, tags in self.training_data:
+                augmented_data.append((sentence, tags))  # Original
+                augmented_data.append((add_noise_to_sentence(sentence), tags))  # Noisy copy
+            random.shuffle(augmented_data)  # Shuffle to mix original and noisy
+            train_iterator = tqdm.tqdm(augmented_data)
+
             for tokenized_sentence, tags in train_iterator:
                 # Step 1. Get our inputs ready for the network, that is, turn them into
                 # Tensors of subword indices. Pre-trained transformer based models come with their fixed
