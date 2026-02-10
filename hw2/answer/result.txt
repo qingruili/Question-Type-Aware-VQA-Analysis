@@ -1,0 +1,19 @@
+1. missing_spelling: missing_spelling.png
+2. missing_spelling + add learning_rate (2adam): learning_rate.png
+3. missing_spelling + add learning_rate (1 adam 1 sgd): sgd.png
+4. missing_spelling + add learning_rate + freeze: freeze.png
+5. missing_spelling + Improving the classification head + learning_rate (2adam): linear_class.png
+6. missing_spelling + Improving the classification head + learning_rate (1 adam + 1sgd): sgd_class.png
+7. missing_spelling + Improving the classification head + learning_rate (1 adam + 1sgd) + mlp: mlp.png
+8. missing_spelling + Improving the classification head + learning_rate (1 adam 1 sgd) + mlp + gradient Clipping: final.png
+
+
+
+Imp1: missing_spelling
+Imp2: missing_spelling + classification head (mlp)
+Imp3: missing_spelling + classification head (mlp) + learning rate (2adam)
+Imp4: missing_spelling + classification head (mlp) + learning_rate (1adam 1sgd)
+Imp5: missing_spelling + classification head (mlp) + learning_rate (1adam 1sgd0.1) + extra hidden layers
+Imp6: missing_spelling + classification head (mlp) + learning_rate (2adam) + extra hidden layers
+Imp7: missing_spelling + classification head (mlp) + learning_rate (1adam 1sgd0.01) + extra hidden layers
+Imp8: missing_spelling + classification head (mlp) + learning_rate (1adam 1sgd 0.01)
