@@ -1,0 +1,2 @@
+1. Add attention (baseline) -score is 14.2427
+2. Add Beam Search decoding - score is 16.3874
