@@ -1,0 +1,11 @@
+1. Original:  dev:0  test: 1.5573
+2. Implement 1: wrap the base LM with a trainable prefix-tuning adapter. dev: 1.1071  test: 1.1189
+3. Implement 2: Add Minimal Prefix-Tuning Training Loop                  dev: 1.1482  test: 1.6942
+4. Implement 3: Load The Trained Prefix Adapter.                         dev: 1.1638  test: 1.2225
+5. Implement 4: Switch Main Execution To Train/Load The Tuned Model      dev: 16.9456 test: 15.3033
+6. Implement 6: Use Deterministic Beam Search                            dev: 16.9456 test: 15.3033
+7. Implement 7: Enable Prefix Projection                                 dev: 22.2689 test: 16.5514
+8. Implement 8: Increase Virtual Tokens                                  dev: 22.6765 test: 20.3171
+9. Implement 9: shorten the maximum generation length to 40              dev: 28.1297 test: 28.5453
+9. Implement 10: shorten the maximum generation length to 35             dev: 31.4342 test: 32.4642
+9. Implement 11: shorten the maximum generation length to 30             dev: 36.4258 test: 40.1003

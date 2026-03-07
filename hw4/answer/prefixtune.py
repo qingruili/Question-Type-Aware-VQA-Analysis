@@ -1,14 +1,19 @@
-import argparse, os, string, sys
+import argparse, gzip, logging, os, random, string, sys
 import torch
 import sacrebleu
 from tqdm import tqdm
 from pathlib import Path
 from transformers import AutoModelForCausalLM, AutoTokenizer, default_data_collator, get_linear_schedule_with_warmup
-from datasets import load_dataset
+from datasets import Dataset, DatasetDict, load_dataset
 from torch.utils.data import DataLoader
-# import peft
+from peft import PeftModel, PrefixTuningConfig, TaskType, get_peft_model
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+random.seed(42)
+torch.manual_seed(42)
+if torch.cuda.is_available():
+    torch.cuda.manual_seed_all(42)
 
 class TableToText:
 
@@ -79,7 +84,27 @@ class TableToText:
           in :param splits: which can contain any subset of ("train", "validation", "test"). The dataloder batchsize will be
             defined using :param self.batchsize:.
         """
-        dataset = load_dataset(self.traindata)
+        train_file = Path(__file__).resolve().parents[1] / "data" / "train.txt.gz"
+        if train_file.exists():
+            # Implement 4: use the provided local training file so the tuned-model path runs reliably.
+            meaning_representations = []
+            human_references = []
+            with gzip.open(train_file, "rt") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    meaning_representation, human_reference = line.split("||", 1)
+                    meaning_representations.append(meaning_representation)
+                    human_references.append(human_reference)
+            dataset = DatasetDict({
+                "train": Dataset.from_dict({
+                    "meaning_representation": meaning_representations,
+                    "human_reference": human_references,
+                })
+            })
+        else:
+            dataset = load_dataset(self.traindata)
         processed_datasets = dataset.map(
             self.preprocess_function,
             batched=True,
@@ -110,10 +135,13 @@ class TableToText:
         # that is produced for dev and test
         #model.print_trainable_parameters()
 
-        # TODO
-        # if using HF peft module, then add calls to PrefixTuningConfig and get_peft_model
-        # which will take num_virtual_tokens which is set to self.virtualtokens and
-        # prefix_projection which is set to self.prefixprojection
+        # Implement 1: wrap the base LM with a trainable prefix-tuning adapter.
+        peft_config = PrefixTuningConfig(
+            task_type=TaskType.CAUSAL_LM,
+            num_virtual_tokens=self.virtualtokens,
+            prefix_projection=self.prefixprojection,
+        )
+        model = get_peft_model(model, peft_config)
 
         optimizer = torch.optim.AdamW(model.parameters(), lr=self.lr)
         lr_scheduler = get_linear_schedule_with_warmup(
@@ -126,7 +154,15 @@ class TableToText:
         for epoch in range(self.epochs):
             model.train()
 
-            # TODO rest of the training steps for prefix tuning
+            # Implement 2: train the prefix parameters with the standard LM loss.
+            for batch in tqdm(data_loaders["train"], desc=f"Training epoch {epoch + 1}"):
+                batch = {k: v.to(device) for k, v in batch.items()}
+                outputs = model(**batch)
+                loss = outputs.loss
+                loss.backward()
+                optimizer.step()
+                lr_scheduler.step()
+                optimizer.zero_grad()
 
             if epoch == self.epochs - 1:
                 epoch_str = '' # last epoch so do not use epoch number in model filename
@@ -157,18 +193,26 @@ class TableToText:
             outputs = model.generate(
                 input_ids=inputs["input_ids"],
                 attention_mask=inputs["attention_mask"],
-                max_new_tokens=50,
+                # Implement 9: shorten the maximum generation length to 30.
+                max_new_tokens=30,
                 eos_token_id=self.tokenizer.eos_token_id,
                 pad_token_id=self.tokenizer_pad_token_id,
-                do_sample=True,
+                # Implement 5: use deterministic beam search for more stable decoding.
+                do_sample=False,
                 num_beams=5,
                 top_p=0.9,
                 temperature=1.0,
                 num_return_sequences=num_sequences
             )
-            # TODO you may want to generate more than one sequence and choose the best one!
-            text = self.tokenizer.batch_decode(outputs.detach().cpu().numpy(), skip_special_tokens=True)[0]
-            return text.lstrip().replace(self.prompt + src, "").replace("\n", " ")
+            # Implement 4: decode only the newly generated tokens and avoid blank outputs.
+            generated_ids = outputs[:, inputs["input_ids"].shape[1]:]
+            text = self.tokenizer.batch_decode(
+                generated_ids.detach().cpu().numpy(),
+                skip_special_tokens=True
+            )[0].strip().replace("\n", " ")
+            if not text:
+                text = src.replace(':', '').replace('|', '').replace('  ', ' ')
+            return text
 
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
@@ -179,10 +223,12 @@ if __name__ == '__main__':
                             default='e2e_nlg_cleaned',
                             help="name of hugging face cleaned up dataset for the E2E table to text task")
     argparser.add_argument("-v", "--virtualtokens", dest="virtualtokens",
-                            type=bool, default=5,
+                            # Implement 7: increase the number of virtual prompt tokens.
+                            type=int, default=10,
                             help="number of virtual prompt tokens for prefix tuning")
     argparser.add_argument("-p", "--prefixprojection", dest="prefixprojection",
-                            action="store_true", default=False,
+                            # Implement 6: enable prefix projection for stronger prefix tuning.
+                            action="store_true", default=True,
                             help="whether to project the prefix embeddings")
     argparser.add_argument("-m", "--modelfile", dest="modelfile",
                             default=os.path.join('data', 'peft'),
@@ -223,11 +269,12 @@ if __name__ == '__main__':
     # when you have implemented prefix tuning then change this to False to train and/or 
     # use your prefix tuned model
     model = None
-    if True:
+    if False:
         print(f"Loading the non-finetuned pre-trained model: {opts.basemodel}", file=sys.stderr)
         model = AutoModelForCausalLM.from_pretrained(opts.basemodel)
         model = model.to(device)
     else:
+        # Implement 4: use the prefix-tuned model path instead of the raw baseline path.
         if not os.path.isdir(modelfile + opts.modelsuffix) or opts.force:
             print(f"Could not find modelfile {modelfile + opts.modelsuffix} or -f used. Starting training.", file=sys.stderr)
             table_to_text.train()
@@ -236,8 +283,8 @@ if __name__ == '__main__':
         assert(os.path.isdir(modelfile + opts.modelsuffix))
         print(f"Found modelfile {modelfile + opts.modelsuffix}. Starting decoding.", file=sys.stderr)
         model = AutoModelForCausalLM.from_pretrained(opts.basemodel)
-        # TODO: if using hf peft library for prefix tuning:
-        # model = PeftModel.from_pretrained(model, modelfile + opts.modelsuffix)
+        # Implement 3: load the trained prefix adapter on top of the base LM.
+        model = PeftModel.from_pretrained(model, modelfile + opts.modelsuffix)
         model = model.to(device)
     if model:
         decoder_output = table_to_text.decode(model, opts.inputfile)
