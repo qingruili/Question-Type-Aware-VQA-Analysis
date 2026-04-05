@@ -1,0 +1,4 @@
+Evaluation mode: normalized
+Questions processed: 132,062
+BLIP overall accuracy: 0.5394
+ViLT overall accuracy: 0.5095

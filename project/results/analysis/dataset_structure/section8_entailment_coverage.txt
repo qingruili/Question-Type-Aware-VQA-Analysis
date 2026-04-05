@@ -1,0 +1,24 @@
+============================================================
+SECTION 8: ENTAILMENT ANNOTATION COVERAGE (validation)
+============================================================
+Questions with entailed field: 108,721 / 132,062 (82.3%)
+
+Per structural × semantic cell:
+  query×rel: 36,196/40,278 (89.9%) have entailments (avg 3.4 entailed per source)
+  query×attr: 17,337/18,092 (95.8%) have entailments (avg 6.3 entailed per source)
+  query×cat: 6,586/7,185 (91.7%) have entailments (avg 4.6 entailed per source)
+  query×global: 2,606/2,612 (99.8%) have entailments (avg 3.0 entailed per source)
+  verify×rel: 8,827/15,602 (56.6%) have entailments (avg 2.0 entailed per source)
+  verify×attr: 7,690/8,053 (95.5%) have entailments (avg 4.7 entailed per source)
+  verify×obj: 1,870/2,879 (65.0%) have entailments (avg 2.9 entailed per source)
+  verify×global: 805/879 (91.6%) have entailments (avg 2.7 entailed per source)
+  logical×attr: 2,419/3,411 (70.9%) have entailments (avg 15.5 entailed per source)
+  logical×obj: 8,547/12,685 (67.4%) have entailments (avg 2.9 entailed per source)
+  choose×rel: 5,458/5,754 (94.9%) have entailments (avg 4.3 entailed per source)
+  choose×attr: 6,439/8,488 (75.9%) have entailments (avg 3.6 entailed per source)
+  choose×cat: 482/1,431 (33.7%) have entailments (avg 1.3 entailed per source)
+  choose×global: 148/556 (26.6%) have entailments (avg 1.3 entailed per source)
+  compare×attr: 3,311/4,157 (79.6%) have entailments (avg 1.7 entailed per source)
+
+Total entailment links : 447,886
+Broken links (target not in val split): 411,813 (91.9% of links)

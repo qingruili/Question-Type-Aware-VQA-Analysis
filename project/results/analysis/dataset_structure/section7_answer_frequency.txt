@@ -1,0 +1,46 @@
+============================================================
+SECTION 7: TRAINING ANSWER FREQUENCY DISTRIBUTION
+============================================================
+Training questions   : 943,000
+Unique answers       : 1,833
+
+Top 30 answers by frequency:
+  166,217  (17.63%)  no
+  165,681  (17.57%)  yes
+   49,009  ( 5.20%)  left
+   48,342  ( 5.13%)  right
+   11,642  ( 1.23%)  man
+   11,546  ( 1.22%)  white
+   10,107  ( 1.07%)  black
+    9,033  ( 0.96%)  bottom
+    8,604  ( 0.91%)  woman
+    8,403  ( 0.89%)  chair
+    8,243  ( 0.87%)  blue
+    8,021  ( 0.85%)  top
+    7,267  ( 0.77%)  table
+    7,115  ( 0.75%)  brown
+    6,571  ( 0.70%)  boy
+    6,055  ( 0.64%)  gray
+    5,818  ( 0.62%)  dog
+    5,542  ( 0.59%)  green
+    5,476  ( 0.58%)  bed
+    5,454  ( 0.58%)  cat
+    5,271  ( 0.56%)  girl
+    5,195  ( 0.55%)  red
+    4,814  ( 0.51%)  car
+    4,410  ( 0.47%)  horse
+    4,163  ( 0.44%)  color
+    4,001  ( 0.42%)  bus
+    3,908  ( 0.41%)  desk
+    3,838  ( 0.41%)  orange
+    3,797  ( 0.40%)  large
+    3,768  ( 0.40%)  couch
+
+Validation GT answers not in training: 18 / 132,062 (0.0%)
+
+Distribution of val GT answer ranks:
+             rank 1–10:  68,793  (52.1%)
+           rank 11–100:  33,741  (25.5%)
+          rank 101–500:  21,864  (16.6%)
+         rank 501–1000:   5,758  (4.4%)
+            rank 1001+:   1,906  (1.4%)

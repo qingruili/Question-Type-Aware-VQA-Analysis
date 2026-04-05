@@ -1,0 +1,146 @@
+================================================================================
+GQA DATASET FIELD GUIDE
+================================================================================
+
+
+── val_balanced_questions.json ────────────────────────────────────────
+Structure: { question_id: { ...fields... }, ... }
+Total questions: 132,062
+Keys per question: ['semantic', 'entailed', 'equivalent', 'question', 'imageId', 'isBalanced', 'groups', 'answer', 'semanticStr', 'annotations', 'types', 'fullAnswer']
+
+  [str] question
+         The natural language question text.
+
+  [str] answer
+         The single ground-truth answer string (always 1 GT). Short: usually 1 word. Models must match this exactly.
+
+  [str] fullAnswer
+         A full sentence form of the answer (e.g., 'The cat is white.'). Not used for evaluation — informational only.
+
+  [str] imageId
+         The GQA image ID (matches filename in data/images/ and key in val_sceneGraphs.json).
+
+  [bool] isBalanced
+         Always True in the balanced split (False entries were filtered out). Balanced = answer distribution is artificially equalized.
+
+  [dict] types
+         Three classification axes:
+           structural (str): reasoning form — query/verify/logical/choose/compare
+           semantic   (str): visual target  — rel/attr/obj/cat/global
+           detailed   (str): 102 fine-grained subtypes (e.g. 'existRelS', 'colorQuery')
+
+  [list] semantic
+         The functional program: a list of reasoning steps (the 'program').
+           Each step: { operation: str, argument: str, dependencies: [int] }
+           'operation': the reasoning op (select, relate, query, filter color, ...)
+           'argument': the target value/attribute (e.g., 'color', 'cat (329774)')
+           'dependencies': indices of prior steps this step depends on
+           len(semantic) = program depth = primary complexity measure.
+
+  [str] semanticStr
+         Human-readable version of the semantic program (arrow-separated). Redundant with 'semantic' but easier to read.
+
+  [dict] annotations
+         Maps question text / answer / fullAnswer to the scene graph object IDs they reference.
+           Structure: { 'answer': {token_pos: sg_obj_id}, 'question': {token_pos: sg_obj_id}, 'fullAnswer': {...} }
+           token_pos is the word index in the question/answer string.
+           sg_obj_id can be looked up in val_sceneGraphs.json.
+           NOTE: many questions have empty annotations (no grounding).
+
+  [dict] groups
+         Semantic group labels:
+           global (str|None): high-level category (e.g. 'color', 'person', 'animal', 'furniture') — 112 values, None for ~48% of questions
+           local  (str):      fine-grained template group (e.g. '10q-helmet_color')
+
+  [list] entailed
+         Question IDs that are logically entailed by this question (if this Q is true, those Qs are also true). Useful for measuring logical consistency of model predictions.
+
+  [list] equivalent
+         Question IDs that ask the same thing (same answer, similar program). Includes this question's own ID. Useful for measuring surface-form robustness.
+
+
+SAMPLE QUESTION (id: 1231468):
+{'annotations': {'answer': {},
+                 'fullAnswer': {'1': '1135762'},
+                 'question': {'7': '1135762'}},
+ 'answer': 'left',
+ 'entailed': ['1231467', '1231466', '1231465'],
+ 'equivalent': ['1231468'],
+ 'fullAnswer': 'The knife is on the left of the image.',
+ 'groups': {'global': None, 'local': '10q-knife_hposition'},
+ 'imageId': '2402467',
+ 'isBalanced': True,
+ 'question': 'Which side of the photo is the knife on?',
+ 'semantic': [{'argument': 'knife (1135762)',
+               'dependencies': [],
+               'operation': 'select'},
+              {'argument': 'hposition',
+               'dependencies': [0],
+               'operation': 'query'}],
+ 'semanticStr': 'select: knife (1135762)->query: hposition [0]',
+ 'types': {'detailed': 'positionQuery',
+           'semantic': 'attr',
+           'structural': 'query'}}
+
+
+── val_sceneGraphs.json ───────────────────────────────────────────────
+Structure: { image_id: { width, height, objects: { obj_id: {...} } } }
+Total images: 10,696
+
+  [int] width / height
+         Image dimensions in pixels.
+
+  [dict] objects
+         Dict of {object_id: object_record}. Object IDs match those in question annotations.
+
+  [str]   name
+         Object category label (e.g., 'person', 'car', 'helmet').
+
+  [int]   x, y, w, h
+         Bounding box: top-left x/y, width, height in pixels.
+
+  [list]   attributes
+         List of attribute strings (e.g., ['blue', 'large']). Can be empty.
+
+  [list]   relations
+         List of {name: str, object: obj_id} dicts. Directed edges to other objects. name = spatial/functional relation (e.g., 'to the left of', 'wearing', 'of').
+
+
+SAMPLE SCENE GRAPH (image_id: 2402467, linked to question above):
+{'...': '(18 objects total)',
+ 'height': 375,
+ 'objects': {'1135739': {'attributes': [],
+                         'h': 36,
+                         'name': 'tomatoes',
+                         'relations': [{'name': 'to the right of',
+                                        'object': '1135753'},
+                                       {'name': 'to the right of',
+                                        'object': '1135756'}],
+                         'w': 27,
+                         'x': 132,
+                         'y': 227},
+             '1135756': {'attributes': [],
+                         'h': 47,
+                         'name': 'vegetables',
+                         'relations': [{'name': 'to the left of',
+                                        'object': '1135754'},
+                                       {'name': 'to the right of',
+                                        'object': '1135753'},
+                                       {'name': 'to the left of',
+                                        'object': '1135739'}],
+                         'w': 40,
+                         'x': 77,
+                         'y': 216}},
+ 'width': 500}
+
+
+── HOW annotations LINKS QUESTION TO SCENE GRAPH ──────────────────────
+annotations.question maps word-position → scene graph object ID.
+You can look up that object ID in val_sceneGraphs.json to get:
+  - the object's name, bounding box, attributes, and relations
+
+Example workflow:
+  q = questions['05515938']   # 'What is this bird called?'
+  ann = q['annotations']['question']   # {'3': '329774'} → word 3 = 'bird' → obj 329774
+  sg = scene_graphs[q['imageId']]      # scene graph for image 2405722
+  obj = sg['objects']['329774']         # name='parrot', x=..., attributes=[...]

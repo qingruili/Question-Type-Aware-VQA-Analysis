@@ -1,0 +1,41 @@
+========================================================================
+EXPERIMENT 1: RELATION TYPE AND SPATIAL HOP COMPLEXITY (BLIP)
+========================================================================
+
+────────────────────────────────────────────────────────────────────────
+SUB-PART A: query×rel — ACCURACY BY RELATION TYPE (marginal)
+────────────────────────────────────────────────────────────────────────
+Relation type            n    Accuracy            95% CI
+spatial              25972       41.5%    [40.9%, 42.1%]
+action               13909       40.6%    [39.8%, 41.5%]
+comparative            394       32.2%    [27.6%, 36.8%]
+all_query_rel        40278       41.1%    [40.6%, 41.6%]
+
+────────────────────────────────────────────────────────────────────────
+SUB-PART A: query×rel — ACCURACY BY (RELATION TYPE × DEPTH BIN)
+────────────────────────────────────────────────────────────────────────
+Relation type       depth=  2  depth=  3  depth=  4  depth= 5+
+                    (acc / n)  (acc / n)  (acc / n)  (acc / n)
+spatial                      —  42.2%/19029  39.7%/ 6734  36.4%/  209
+action                       —  41.9%/ 9913  37.3%/ 3899  46.4%/   97
+comparative                  —  35.4%/  240  27.3%/  154           —
+all_query_rel                —  42.0%/29184  38.7%/10788  39.5%/  306
+
+Significance test (spatial vs action accuracy per depth bin):
+  depth=3: spatial=42.2%(n=19029) vs action=41.9%(n=9913)  z=0.50, p=0.6188 ns
+  depth=4: spatial=39.7%(n=6734) vs action=37.3%(n=3899)  z=2.49, p=0.0126 *
+  depth=5+: spatial=36.4%(n=209) vs action=46.4%(n=97)  z=-1.67, p=0.0950 ns
+
+────────────────────────────────────────────────────────────────────────
+SUB-PART B: SPATIAL HOPS × SEMANTIC TYPE
+────────────────────────────────────────────────────────────────────────
+Semantic type         0 hops        1 hops       2+ hops
+                (acc / n)  (acc / n)  (acc / n)
+rel             51.8%/22225  48.8%/35292  50.6%/ 4117
+attr            57.9%/36816  58.5%/ 5385             —
+cat             56.7%/ 8616             —             —
+
+Accuracy drop from 0→1 spatial hop and 0→2+ spatial hops:
+  rel: 0→1 hop: -3.0%,  0→2+ hops: -1.2%
+  attr: 0→1 hop: +0.6%,  0→2+ hops: +nan%
+  cat: 0→1 hop: +nan%,  0→2+ hops: +nan%

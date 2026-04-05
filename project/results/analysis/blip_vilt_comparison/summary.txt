@@ -1,0 +1,3 @@
+Questions processed: 132,062
+BLIP overall accuracy: 0.5291
+ViLT overall accuracy: 0.5003

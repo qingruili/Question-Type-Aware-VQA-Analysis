@@ -1,0 +1,45 @@
+============================================================
+SECTION 10: ANSWER VOCABULARY BY SEMANTIC TYPE (validation GT answers)
+============================================================
+
+rel: 1,206 unique answers across 61,634 questions
+  Top 15: ['no(7908)', 'yes(7694)', 'left(2621)', 'right(2597)', 'man(1511)', 'woman(1038)', 'chair(818)', 'boy(772)', 'girl(694)', 'table(639)', 'car(540)', 'dog(510)', 'bed(502)', 'cat(446)', 'people(439)']
+
+attr: 289 unique answers across 42,201 questions
+  Top 15: ['no(7403)', 'yes(7302)', 'left(4287)', 'right(4213)', 'white(1548)', 'black(1519)', 'bottom(1260)', 'blue(1160)', 'top(1099)', 'brown(1061)', 'gray(842)', 'green(763)', 'red(720)', 'large(580)', 'color(575)']
+
+obj: 2 unique answers across 15,564 questions
+  Top 15: ['yes(8073)', 'no(7491)']
+
+cat: 411 unique answers across 8,616 questions
+  Top 15: ['table(358)', 'bed(284)', 'chair(281)', 'cat(267)', 'shirt(203)', 'dog(198)', 'jacket(193)', 'train(186)', 'desk(183)', 'bus(172)', 'couch(166)', 'man(163)', 'horse(152)', 'pants(141)', 'woman(132)']
+
+global: 97 unique answers across 4,047 questions
+  Top 15: ['no(469)', 'yes(410)', 'field(226)', 'street(221)', 'outdoors(191)', 'ocean(169)', 'indoors(161)', 'road(130)', 'beach(118)', 'cloudy(92)', 'park(85)', 'sidewalk(73)', 'station(71)', 'pavement(64)', 'clear(61)']
+
+============================================================
+ANSWER OVERLAP BETWEEN SEMANTIC TYPES
+============================================================
+  rel ∩ attr: 58 shared answers  e.g. ['strawberry', 'bun', 'woman', 'paper', 'tennis', 'rock', 'lady', 'hamburger']
+  rel ∩ obj: 2 shared answers  e.g. ['yes', 'no']
+  rel ∩ cat: 392 shared answers  e.g. ['computer', 'bookshelf', 'camera', 'bears', 'drawer', 'omelette', 'knife', 'monitor']
+  rel ∩ global: 72 shared answers  e.g. ['store', 'farm', 'skate park', 'bathroom', 'beach', 'patio', 'yard', 'garage']
+  attr ∩ obj: 2 shared answers  e.g. ['yes', 'no']
+  attr ∩ cat: 33 shared answers  e.g. ['strawberry', 'bun', 'woman', 'lady', 'hamburger', 'girl', 'parsley', 'salad']
+  attr ∩ global: 13 shared answers  e.g. ['no', 'partly cloudy', 'indoors', 'rainy', 'cloudless', 'yes', 'foggy', 'sunny']
+  obj ∩ cat: 0 shared answers  e.g. []
+  obj ∩ global: 2 shared answers  e.g. ['yes', 'no']
+  cat ∩ global: 0 shared answers  e.g. []
+
+Questions with binary GT answers: 46,750
+Structural types of binary-answer questions:
+  verify: 27,413
+  logical: 16,096
+  compare: 3,241
+
+Answers unique to each semantic type (not in any other):
+  rel: 718 unique answers  e.g. ['cream cheese', 'cream', 'placemat', 'serving dish', 'breakfast', 'almonds', 'magazine', 'gas stove', 'clock tower', 'shower curtain']
+  attr: 219 unique answers  e.g. ['unhealthy', 'asphalt', 'bare', 'young', 'striped', 'taking pictures', 'stained', 'jumping', 'long sleeved', 'dried']
+  obj: 0 unique answers  e.g. []
+  cat: 18 unique answers  e.g. ['herb', 'camel', 'blazer', 'plantains', 'customer', 'dresses', 'gown', 'keyboards', 'mixing bowl', 'nut']
+  global: 14 unique answers  e.g. ['swamp', 'school', 'pub', 'city', 'salon', 'cafeteria', 'supermarket', 'village', 'library', 'lawn']

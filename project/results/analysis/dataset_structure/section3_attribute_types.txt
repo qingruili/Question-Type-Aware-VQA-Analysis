@@ -1,0 +1,284 @@
+============================================================
+SECTION 3: ATTRIBUTE TYPES IN PROGRAMS (attr semantic, validation)
+============================================================
+Total unique attribute types: 216
+   Count  Attribute type
+----------------------------------------
+   16964  color
+   10482  hposition
+    3255  vposition
+    2691  material
+    2030  size
+     690  common
+     668  length
+     545  pose
+     429  height
+     414  activity
+     345  shape
+     332  weather
+     273  same
+     213  pattern
+     196  different
+     175  sportActivity
+     163  cleanliness
+     134  thickness
+     120  age
+     110  open
+     109  state
+      92  younger
+      90  open|closed
+      78  older
+      62  closed|open
+      51  width
+      50  closed
+      49  tone
+      48  empty|full
+      40  short sleeved
+      40  wet
+      38  full|empty
+      36  on|off
+      35  hardness
+      33  depth
+      33  full
+      30  less healthy
+      27  empty
+      26  short sleeved|long sleeved
+      26  fatness
+      24  healthier
+      24  gender
+      23  race
+      23  wet|dry
+      22  off|on
+      21  covered
+      20  colorful
+      20  dry
+      20  weight
+      20  face expression
+      19  long sleeved|short sleeved
+      19  snowy
+      18  old
+      18  dry|wet
+      17  long sleeved
+      17  company
+      17  curved
+      16  realism
+      16  bright
+      15  straight
+      14  up|down
+      13  short sleeved|sleeveless
+      13  adult
+      13  curly
+      13  murky
+      12  curly|straight
+      12  rocky
+      11  down|up
+      11  grassy
+      11  long sleeved|sleeveless
+      11  on
+      10  sandy
+      10  high
+       9  bare
+       9  clear
+       9  colorful|black and white
+       9  new
+       9  leafy
+       8  flavor
+       8  dried|wet
+       8  old|new
+       7  vintage
+       7  ripe
+       7  healthy
+       7  sleeveless
+       7  baseball|soccer
+       7  cooked
+       7  modern
+       7  tennis|soccer
+       7  black and white
+       6  off
+       6  rocky|snowy
+       6  snowy|grassy
+       6  wild
+       6  low
+       6  beautiful|ugly
+       6  up
+       5  toasted
+       5  lush
+       5  baseball|tennis
+       5  sleeveless|long sleeved
+       5  beautiful
+       5  unpaved
+       5  grilled
+       5  high|low
+       5  open|shut
+       5  bushy
+       5  baby
+       5  snowy|rocky
+       4  new|old
+       4  leafy|bare
+       4  antique
+       4  tennis|baseball
+       4  old fashioned
+       4  unripe
+       4  sandy|rocky
+       4  fresh
+       3  sparse
+       3  paved
+       3  straight|curly
+       3  lush|bare
+       3  rocky|grassy
+       3  adult|baby
+       3  type
+       3  outdoors
+       3  peeled|unpeeled
+       3  sparse|dense
+       3  rotten
+       3  covered|bare
+       3  black and white|colorful
+       3  unpaved|paved
+       3  None
+       3  fried
+       3  indoors
+       3  unpeeled|peeled
+       3  rainbow colored
+       2  rocky|sandy
+       2  dull|bright
+       2  dried
+       2  sleeveless|short sleeved
+       2  15
+       2  ugly
+       2  antique|modern
+       2  low|high
+       2  opaqness
+       2  steamed
+       2  wet|dried
+       2  texture
+       2  raw|cooked
+       2  unpeeled
+       2  sandy|grassy
+       2  baby|adult
+       2  snowy|sandy
+       2  baseball
+       2  uncooked
+       2  murky|clear
+       2  dense|sparse
+       2  rounded
+       2  sandy|bare
+       2  roasted|raw
+       2  outdoors|indoors
+       2  steamed|raw
+       2  curled
+       2  leafy|leafless
+       2  raw
+       2  down
+       2  bare|leafy
+       2  unripe|ripe
+       2  uncomfortable
+       1  rocky|bare
+       1  leafless
+       1  snowy|bare
+       1  healthy|unhealthy
+       1  sandy|snowy
+       1  grassy|rocky
+       1  indoors|outdoors
+       1  leafless|lush
+       1  fried|uncooked
+       1  immature
+       1  ripe|unripe
+       1  bare|sandy
+       1  straight|curved
+       1  rainbow colored|black and white
+       1  ugly|beautiful
+       1  bare|lush
+       1  lush|leafless
+       1  immature|mature
+       1  straight|curled
+       1  curved|straight
+       1  grassy|bare
+       1  shut|open
+       1  leafless|leafy
+       1  bare|grassy
+       1  higher
+       1  cooked|raw
+       1  fresh|rotten
+       1  bare|snowy
+       1  uncooked|cooked
+       1  vintage|modern
+       1  shut
+       1  rotten|fresh
+       1  shorter
+       1  clear|murky
+       1  baked
+       1  unhealthy|healthy
+       1  soccer|tennis
+       1  baked|raw
+       1  paved|unpaved
+       1  tennis
+       1  dense
+       1  leafless|covered
+       1  brightness
+       1  unhealthy
+       1  bare|covered
+       1  raw|grilled
+       1  curled|straight
+
+Per structural type (top 10 each):
+
+  query:
+      7,790  color
+      6,502  hposition
+      1,387  material
+        860  size
+        273  activity
+        272  pose
+        203  length
+        156  height
+        113  shape
+        110  sportActivity
+
+  verify:
+      3,262  color
+      1,982  hposition
+        896  vposition
+        323  size
+        311  material
+        209  pose
+        127  length
+        115  weather
+         83  activity
+         55  shape
+
+  logical:
+      1,107  color
+        600  size
+        305  material
+        249  length
+        176  height
+        151  weather
+        142  shape
+         88  pattern
+         70  open
+         52  state
+
+  choose:
+      2,359  vposition
+      2,309  color
+      1,998  hposition
+        420  material
+        247  size
+         90  open|closed
+         89  length
+         66  weather
+         64  pose
+         62  closed|open
+
+  compare:
+      2,496  color
+        690  common
+        273  same
+        268  material
+        196  different
+         92  younger
+         78  older
+         30  less healthy
+         24  healthier
+          8  shape

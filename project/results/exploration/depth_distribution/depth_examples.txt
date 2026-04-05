@@ -1,0 +1,694 @@
+================================================================================
+PROGRAM DEPTH EXAMPLES BY STRUCTURAL TYPE
+================================================================================
+
+Program depth = number of steps in the functional program (q['semantic']).
+Each example shows the question, answer, full answer, and step-by-step program.
+
+
+══════════════════════════════════════════════════════════════════════
+  STRUCTURAL TYPE: QUERY
+  Depth distribution: depth 2: 14,821 (22%)  |  depth 3: 42,149 (62%)  |  depth 4: 10,891 (16%)  |  depth 5: 306 (0%)
+══════════════════════════════════════════════════════════════════════
+
+  ── depth 2  (14,821 questions) ──────────────────────
+
+    Example 1 [query×cat]:
+      question   : What is this bird called?
+      answer     : 'parrot'
+      fullAnswer : 'This is a parrot.'
+      imageId    : 2405722
+      program (2 steps):
+        step 0: select('bird (329774)') [root]
+        step 1: query('name') [deps: [0]]
+
+    Example 2 [query×attr]:
+      question   : Which side of the photo is the knife on?
+      answer     : 'left'
+      fullAnswer : 'The knife is on the left of the image.'
+      imageId    : 2402467
+      program (2 steps):
+        step 0: select('knife (1135762)') [root]
+        step 1: query('hposition') [deps: [0]]
+
+    Example 3 [query×global]:
+      question   : What place is pictured?
+      answer     : 'shore'
+      fullAnswer : 'It is a shore.'
+      imageId    : 2352110
+      program (2 steps):
+        step 0: select('scene') [root]
+        step 1: query('place') [deps: [0]]
+
+  ── depth 3  (42,149 questions) ──────────────────────
+
+    Example 1 [query×attr]:
+      question   : What color is the helmet in the middle of the image?
+      answer     : 'light blue'
+      fullAnswer : 'The helmet is light blue.'
+      imageId    : 2331963
+      program (3 steps):
+        step 0: select('helmet (3205899)') [root]
+        step 1: filter vposition('middle') [deps: [0]]
+        step 2: query('color') [deps: [1]]
+
+    Example 2 [query×rel]:
+      question   : What is the woman in front of?
+      answer     : 'statue'
+      fullAnswer : 'The woman is in front of the statue.'
+      imageId    : 2385322
+      program (3 steps):
+        step 0: select('woman (521697)') [root]
+        step 1: relate('_,in front of,o (521700)') [deps: [0]]
+        step 2: query('name') [deps: [1]]
+
+    Example 3 [query×cat]:
+      question   : What device is not on?
+      answer     : 'remote control'
+      fullAnswer : 'The device is a remote control.'
+      imageId    : 2399127
+      program (3 steps):
+        step 0: select('device (418896)') [root]
+        step 1: filter('not(on)') [deps: [0]]
+        step 2: query('name') [deps: [1]]
+
+  ── depth 4  (10,891 questions) ──────────────────────
+
+    Example 1 [query×rel]:
+      question   : What is under the utensil on the left?
+      answer     : 'napkin'
+      fullAnswer : 'The napkin is under the utensil.'
+      imageId    : 1339
+      program (4 steps):
+        step 0: select('utensil (1066923)') [root]
+        step 1: filter hposition('left') [deps: [0]]
+        step 2: relate('_,under,s (1066926)') [deps: [1]]
+        step 3: query('name') [deps: [2]]
+
+    Example 2 [query×attr]:
+      question   : How large are the pink gloves on the bear?
+      answer     : 'little'
+      fullAnswer : 'The gloves are little.'
+      imageId    : 2392752
+      program (4 steps):
+        step 0: select('bear (1226206)') [root]
+        step 1: relate('gloves,on,s (1226212)') [deps: [0]]
+        step 2: filter color('pink') [deps: [1]]
+        step 3: query('size') [deps: [2]]
+
+    Example 3 [query×rel]:
+      question   : The woman to the left of the man is wearing what?
+      answer     : 'dress'
+      fullAnswer : 'The woman is wearing a dress.'
+      imageId    : 2330230
+      program (4 steps):
+        step 0: select('man (3503789)') [root]
+        step 1: relate('woman,to the left of,s (3328117)') [deps: [0]]
+        step 2: relate('_,wearing,o (3328116)') [deps: [1]]
+        step 3: query('name') [deps: [2]]
+
+  ── depth 5  (306 questions) ──────────────────────
+
+    Example 1 [query×rel]:
+      question   : What is the animal that is to the left of the brown object that is to the left of the speaker called?
+      answer     : 'cat'
+      fullAnswer : 'The animal is a cat.'
+      imageId    : 2370859
+      program (5 steps):
+        step 0: select('speaker (601275)') [root]
+        step 1: relate('bed,to the left of,s (601277)') [deps: [0]]
+        step 2: filter color('brown') [deps: [1]]
+        step 3: relate('animal,to the left of,s (601271)') [deps: [2]]
+        step 4: query('name') [deps: [3]]
+
+    Example 2 [query×rel]:
+      question   : The traffic light that is red and black is hanging from what?
+      answer     : 'pole'
+      fullAnswer : 'The signal light is hanging from the pole.'
+      imageId    : 2342705
+      program (5 steps):
+        step 0: select('traffic light (931408)') [root]
+        step 1: filter color('red') [deps: [0]]
+        step 2: filter color('black') [deps: [1]]
+        step 3: relate('_,hanging from,o (931419)') [deps: [2]]
+        step 4: query('name') [deps: [3]]
+
+    Example 3 [query×rel]:
+      question   : What type of fast food is on the grill that looks gray and black?
+      answer     : 'hot dogs'
+      fullAnswer : 'The food is hot dogs.'
+      imageId    : 2410758
+      program (5 steps):
+        step 0: select('grill (321390)') [root]
+        step 1: filter color('gray') [deps: [0]]
+        step 2: filter color('black') [deps: [1]]
+        step 3: relate('fast food,on,s (321389)') [deps: [2]]
+        step 4: query('name') [deps: [3]]
+
+══════════════════════════════════════════════════════════════════════
+  STRUCTURAL TYPE: VERIFY
+  Depth distribution: depth 2: 12,905 (47%)  |  depth 3: 9,559 (35%)  |  depth 4: 4,805 (18%)  |  depth 5: 144 (1%)
+══════════════════════════════════════════════════════════════════════
+
+  ── depth 2  (12,905 questions) ──────────────────────
+
+    Example 1 [verify×rel]:
+      question   : Does the man ride a horse?
+      answer     : 'no'
+      fullAnswer : 'No, the man rides a bike.'
+      imageId    : 2372693
+      program (2 steps):
+        step 0: select('man (1927215)') [root]
+        step 1: verify rel('horse,riding,o (-)') [deps: [0]]
+
+    Example 2 [verify×obj]:
+      question   : Is there a computer in this photo?
+      answer     : 'no'
+      fullAnswer : 'No, there are no computers.'
+      imageId    : 2334847
+      program (2 steps):
+        step 0: select('computer (-)') [root]
+        step 1: exist('?') [deps: [0]]
+
+    Example 3 [verify×attr]:
+      question   : Does the belt look tan?
+      answer     : 'no'
+      fullAnswer : 'No, the belt is black.'
+      imageId    : 2382016
+      program (2 steps):
+        step 0: select('belt (699899)') [root]
+        step 1: verify color('tan') [deps: [0]]
+
+  ── depth 3  (9,559 questions) ──────────────────────
+
+    Example 1 [verify×attr]:
+      question   : Does the person to the left of the man appear to be sitting?
+      answer     : 'yes'
+      fullAnswer : 'Yes, the woman is sitting.'
+      imageId    : 2317756
+      program (3 steps):
+        step 0: select('man (1017651)') [root]
+        step 1: relate('person,to the left of,s (1017653)') [deps: [0]]
+        step 2: verify pose('sitting') [deps: [1]]
+
+    Example 2 [verify×rel]:
+      question   : Is the person to the left of the frisbee wearing a glove?
+      answer     : 'no'
+      fullAnswer : 'No, the man is wearing a shirt.'
+      imageId    : 2408005
+      program (3 steps):
+        step 0: select('frisbee (269863)') [root]
+        step 1: relate('person,to the left of,s (269862)') [deps: [0]]
+        step 2: verify rel('glove,wearing,o (-)') [deps: [1]]
+
+    Example 3 [verify×obj]:
+      question   : Are there any kites in the photograph that are green?
+      answer     : 'yes'
+      fullAnswer : 'Yes, there is a kite that is green.'
+      imageId    : 2329046
+      program (3 steps):
+        step 0: select('kite (975200)') [root]
+        step 1: filter color('green') [deps: [0]]
+        step 2: exist('?') [deps: [1]]
+
+  ── depth 4  (4,805 questions) ──────────────────────
+
+    Example 1 [verify×rel]:
+      question   : Are there napkins under the utensil to the left of the rice?
+      answer     : 'yes'
+      fullAnswer : 'Yes, there is a napkin under the utensil.'
+      imageId    : 1339
+      program (4 steps):
+        step 0: select('rice (1066932)') [root]
+        step 1: relate('utensil,to the left of,s (1066923)') [deps: [0]]
+        step 2: relate('napkin,under,s (1066926)') [deps: [1]]
+        step 3: exist('?') [deps: [2]]
+
+    Example 2 [verify×attr]:
+      question   : Does the hair that looks gray and black look thick?
+      answer     : 'no'
+      fullAnswer : 'No, the hair is thin.'
+      imageId    : 2386936
+      program (4 steps):
+        step 0: select('hair (1280945)') [root]
+        step 1: filter color('gray') [deps: [0]]
+        step 2: filter color('black') [deps: [1]]
+        step 3: verify thickness('thick') [deps: [2]]
+
+    Example 3 [verify×rel]:
+      question   : Is there any surfboard to the right of the man the people are standing by?
+      answer     : 'yes'
+      fullAnswer : 'Yes, there is a surfboard to the right of the man.'
+      imageId    : 2366513
+      program (4 steps):
+        step 0: select('people (2230961)') [root]
+        step 1: relate('man,standing near,o (2318107)') [deps: [0]]
+        step 2: relate('surfboard,to the right of,s (1970781)') [deps: [1]]
+        step 3: exist('?') [deps: [2]]
+
+  ── depth 5  (144 questions) ──────────────────────
+
+    Example 1 [verify×rel]:
+      question   : Are there fries to the right of the bottle that looks dark and brown?
+      answer     : 'yes'
+      fullAnswer : 'Yes, there are fries to the right of the bottle.'
+      imageId    : 2413411
+      program (5 steps):
+        step 0: select('bottle (174041)') [root]
+        step 1: filter color('dark') [deps: [0]]
+        step 2: filter color('brown') [deps: [1]]
+        step 3: relate('fries,to the right of,s (174046)') [deps: [2]]
+        step 4: exist('?') [deps: [3]]
+
+    Example 2 [verify×rel]:
+      question   : Are there boys to the right of the skateboard that looks red and black?
+      answer     : 'yes'
+      fullAnswer : 'Yes, there is a boy to the right of the skateboard.'
+      imageId    : 2346089
+      program (5 steps):
+        step 0: select('skateboard (3910918)') [root]
+        step 1: filter color('red') [deps: [0]]
+        step 2: filter color('black') [deps: [1]]
+        step 3: relate('boy,to the right of,s (3619677)') [deps: [2]]
+        step 4: exist('?') [deps: [3]]
+
+    Example 3 [verify×rel]:
+      question   : Are there any women next to the flowers that look yellow and orange?
+      answer     : 'yes'
+      fullAnswer : 'Yes, there is a woman next to the flowers.'
+      imageId    : 2326679
+      program (5 steps):
+        step 0: select('flowers (3980185)') [root]
+        step 1: filter color('yellow') [deps: [0]]
+        step 2: filter color('orange') [deps: [1]]
+        step 3: relate('woman,next to,s (3980184)') [deps: [2]]
+        step 4: exist('?') [deps: [3]]
+
+══════════════════════════════════════════════════════════════════════
+  STRUCTURAL TYPE: LOGICAL
+  Depth distribution: depth 4: 1,913 (12%)  |  depth 5: 10,585 (66%)  |  depth 6: 85 (1%)  |  depth 7: 3,506 (22%)  |  depth 8: 6 (0%)  |  depth 9: 1 (0%)
+══════════════════════════════════════════════════════════════════════
+
+  ── depth 4  (1,913 questions) ──────────────────────
+
+    Example 1 [logical×attr]:
+      question   : Is the shirt sleeveless and white?
+      answer     : 'yes'
+      fullAnswer : 'Yes, the shirt is sleeveless and white.'
+      imageId    : 2393663
+      program (4 steps):
+        step 0: select('shirt (1217956)') [root]
+        step 1: verify('sleeveless') [deps: [0]]
+        step 2: verify color('white ') [deps: [0]]
+        step 3: and('') [deps: [1, 2]]
+
+    Example 2 [logical×attr]:
+      question   : Is the fur both black and thin?
+      answer     : 'no'
+      fullAnswer : 'No, the fur is black but thick.'
+      imageId    : 2404598
+      program (4 steps):
+        step 0: select('fur (4218027)') [root]
+        step 1: verify color('black') [deps: [0]]
+        step 2: verify thickness('thin ') [deps: [0]]
+        step 3: and('') [deps: [1, 2]]
+
+    Example 3 [logical×attr]:
+      question   : Does the polar bear look white and still?
+      answer     : 'no'
+      fullAnswer : 'No, the polar bear is still but brown.'
+      imageId    : 2383490
+      program (4 steps):
+        step 0: select('polar bear (532410)') [root]
+        step 1: verify state('still') [deps: [0]]
+        step 2: verify color('white ') [deps: [0]]
+        step 3: and('') [deps: [1, 2]]
+
+  ── depth 5  (10,585 questions) ──────────────────────
+
+    Example 1 [logical×obj]:
+      question   : Are there both plates and forks in this picture?
+      answer     : 'yes'
+      fullAnswer : 'Yes, there are both a fork and a plate.'
+      imageId    : 2337344
+      program (5 steps):
+        step 0: select('fork (958012)') [root]
+        step 1: exist('?') [deps: [0]]
+        step 2: select('plate (958006) ') [root]
+        step 3: exist('?') [deps: [2]]
+        step 4: and('') [deps: [1, 3]]
+
+    Example 2 [logical×attr]:
+      question   : Is the plate of the table both dirty and silver?
+      answer     : 'no'
+      fullAnswer : 'No, the plate is dirty but red.'
+      imageId    : 2346114
+      program (5 steps):
+        step 0: select('table (902362)') [root]
+        step 1: relate('plate,of,s (902357)') [deps: [0]]
+        step 2: verify cleanliness('dirty') [deps: [1]]
+        step 3: verify color('silver ') [deps: [1]]
+        step 4: and('') [deps: [2, 3]]
+
+    Example 3 [logical×obj]:
+      question   : Are there nuts or vegetables?
+      answer     : 'no'
+      fullAnswer : 'No, there are no nuts or vegetables.'
+      imageId    : 2368045
+      program (5 steps):
+        step 0: select('vegetables (-)') [root]
+        step 1: exist('?') [deps: [0]]
+        step 2: select('nuts (-) ') [root]
+        step 3: exist('?') [deps: [2]]
+        step 4: or('') [deps: [1, 3]]
+
+  ── depth 6  (85 questions) ──────────────────────
+
+    Example 1 [logical×obj]:
+      question   : Are both the dishwasher and the appliance that is to the left of the dispenser black?
+      answer     : 'yes'
+      fullAnswer : 'Yes, both the dishwasher and the microwave oven are black.'
+      imageId    : 2410733
+      program (6 steps):
+        step 0: select('dishwasher (321721)') [root]
+        step 1: verify color('black') [deps: [0]]
+        step 2: select('dispenser (321716) ') [root]
+        step 3: relate('appliance,to the left of,s (321714)') [deps: [2]]
+        step 4: verify color('black') [deps: [3]]
+        step 5: and('') [deps: [1, 4]]
+
+    Example 2 [logical×attr]:
+      question   : Does the large bed near the pillow look wide and thin?
+      answer     : 'no'
+      fullAnswer : 'No, the bed is wide but thick.'
+      imageId    : 2391999
+      program (6 steps):
+        step 0: select('pillow (1235066)') [root]
+        step 1: relate('bed,near,s (1235063)') [deps: [0]]
+        step 2: filter size('large') [deps: [1]]
+        step 3: verify thickness('thin') [deps: [2]]
+        step 4: verify width('wide ') [deps: [2]]
+        step 5: and('') [deps: [3, 4]]
+
+    Example 3 [logical×obj]:
+      question   : Do both the meter to the right of the bag and the planter look black?
+      answer     : 'yes'
+      fullAnswer : 'Yes, both the meter and the planter are black.'
+      imageId    : 2326613
+      program (6 steps):
+        step 0: select('bag (4133373)') [root]
+        step 1: relate('parking meter,to the right of,s (4133348)') [deps: [0]]
+        step 2: verify color('black') [deps: [1]]
+        step 3: select('planter (4133345) ') [root]
+        step 4: verify color('black') [deps: [3]]
+        step 5: and('') [deps: [2, 4]]
+
+  ── depth 7  (3,506 questions) ──────────────────────
+
+    Example 1 [logical×obj]:
+      question   : Is there any grass or mud that is not brown?
+      answer     : 'no'
+      fullAnswer : 'No, there is grass but it is brown.'
+      imageId    : 2350927
+      program (7 steps):
+        step 0: select('grass (3899215)') [root]
+        step 1: filter color('not(brown)') [deps: [0]]
+        step 2: exist('?') [deps: [1]]
+        step 3: select('mud (-) ') [root]
+        step 4: filter color('not(brown)') [deps: [3]]
+        step 5: exist('?') [deps: [4]]
+        step 6: or('') [deps: [2, 5]]
+
+    Example 2 [logical×obj]:
+      question   : Is there either a table or a bookcase that is made of wood?
+      answer     : 'no'
+      fullAnswer : 'No, there is a table but it is made of metal.'
+      imageId    : 2328812
+      program (7 steps):
+        step 0: select('table (976106)') [root]
+        step 1: filter material('wood') [deps: [0]]
+        step 2: exist('?') [deps: [1]]
+        step 3: select('bookcase (-) ') [root]
+        step 4: filter material('wood') [deps: [3]]
+        step 5: exist('?') [deps: [4]]
+        step 6: or('') [deps: [2, 5]]
+
+    Example 3 [logical×obj]:
+      question   : Do you see either any purple bags or umbrellas?
+      answer     : 'yes'
+      fullAnswer : 'Yes, there is a purple bag.'
+      imageId    : 2361209
+      program (7 steps):
+        step 0: select('bag (2082493)') [root]
+        step 1: filter color('purple') [deps: [0]]
+        step 2: exist('?') [deps: [1]]
+        step 3: select('umbrella (-) ') [root]
+        step 4: filter color('purple') [deps: [3]]
+        step 5: exist('?') [deps: [4]]
+        step 6: or('') [deps: [2, 5]]
+
+  ── depth 8  (6 questions) ──────────────────────
+
+    Example 1 [logical×obj]:
+      question   : Do the blue boat and the boat that looks black and white both seem to be small?
+      answer     : 'yes'
+      fullAnswer : 'Yes, both the boat and the boat are small.'
+      imageId    : 2319304
+      program (8 steps):
+        step 0: select('boat (1003066)') [root]
+        step 1: filter color('blue') [deps: [0]]
+        step 2: verify size('small') [deps: [1]]
+        step 3: select('boat (1003065) ') [root]
+        step 4: filter color('black') [deps: [3]]
+        step 5: filter color('white') [deps: [4]]
+        step 6: verify size('small') [deps: [5]]
+        step 7: and('') [deps: [2, 6]]
+
+    Example 2 [logical×obj]:
+      question   : Are both the animal that looks brown and white and the black zebra eating?
+      answer     : 'yes'
+      fullAnswer : 'Yes, both the giraffe and the zebra are eating.'
+      imageId    : 2326274
+      program (8 steps):
+        step 0: select('animal (982826)') [root]
+        step 1: filter color('brown') [deps: [0]]
+        step 2: filter color('white') [deps: [1]]
+        step 3: verify activity('eating') [deps: [2]]
+        step 4: select('zebra (982827) ') [root]
+        step 5: filter color('black') [deps: [4]]
+        step 6: verify activity('eating') [deps: [5]]
+        step 7: and('') [deps: [3, 6]]
+
+    Example 3 [logical×obj]:
+      question   : Do the white trailer and the parked car to the left of the other car both have small size?
+      answer     : 'yes'
+      fullAnswer : 'Yes, both the trailer and the car are small.'
+      imageId    : 1841
+      program (8 steps):
+        step 0: select('trailer (1033434)') [root]
+        step 1: filter color('white') [deps: [0]]
+        step 2: verify size('small') [deps: [1]]
+        step 3: select('car (1033426) ') [root]
+        step 4: relate('car,to the left of,s (1033425)') [deps: [3]]
+        step 5: filter('parked') [deps: [4]]
+        step 6: verify size('small') [deps: [5]]
+        step 7: and('') [deps: [2, 6]]
+
+  ── depth 9  (1 questions) ──────────────────────
+
+    Example 1 [logical×obj]:
+      question   : Are both the banana that looks yellow and green and the banana that looks yellow and green short?
+      answer     : 'yes'
+      fullAnswer : 'Yes, both the banana and the banana are short.'
+      imageId    : 2406169
+      program (9 steps):
+        step 0: select('banana (326053)') [root]
+        step 1: filter color('yellow') [deps: [0]]
+        step 2: filter color('green') [deps: [1]]
+        step 3: verify length('short') [deps: [2]]
+        step 4: select('banana (326051) ') [root]
+        step 5: filter color('yellow') [deps: [4]]
+        step 6: filter color('green') [deps: [5]]
+        step 7: verify length('short') [deps: [6]]
+        step 8: and('') [deps: [3, 7]]
+
+══════════════════════════════════════════════════════════════════════
+  STRUCTURAL TYPE: CHOOSE
+  Depth distribution: depth 2: 8,548 (53%)  |  depth 3: 7,414 (46%)  |  depth 4: 266 (2%)  |  depth 5: 1 (0%)
+══════════════════════════════════════════════════════════════════════
+
+  ── depth 2  (8,548 questions) ──────────────────────
+
+    Example 1 [choose×global]:
+      question   : Is it an indoors or outdoors scene?
+      answer     : 'indoors'
+      fullAnswer : 'It is indoors.'
+      imageId    : 2400861
+      program (2 steps):
+        step 0: select('scene') [root]
+        step 1: choose location('indoors|outdoors') [deps: [0]]
+
+    Example 2 [choose×attr]:
+      question   : Is the curtain on the right side or on the left of the picture?
+      answer     : 'right'
+      fullAnswer : 'The curtain is on the right of the image.'
+      imageId    : 2333016
+      program (2 steps):
+        step 0: select('curtain (968238)') [root]
+        step 1: choose hposition('right|left') [deps: [0]]
+
+    Example 3 [choose×rel]:
+      question   : Is the surfer to the left or to the right of the surfboard?
+      answer     : 'right'
+      fullAnswer : 'The surfer is to the right of the surfboard.'
+      imageId    : 2397985
+      program (2 steps):
+        step 0: select('surfboard (429134)') [root]
+        step 1: choose rel('surfer,to the right of|to the left of,s (429128)') [deps: [0]]
+
+  ── depth 3  (7,414 questions) ──────────────────────
+
+    Example 1 [choose×attr]:
+      question   : Does the boat to the left of the flag look small or large?
+      answer     : 'small'
+      fullAnswer : 'The boat is small.'
+      imageId    : 2339443
+      program (3 steps):
+        step 0: select('flag (2328930)') [root]
+        step 1: relate('boat,to the left of,s (3151228)') [deps: [0]]
+        step 2: choose size('small|large') [deps: [1]]
+
+    Example 2 [choose×rel]:
+      question   : Is the woman to the left or to the right of the man that is wearing trousers?
+      answer     : 'right'
+      fullAnswer : 'The woman is to the right of the man.'
+      imageId    : 2251
+      program (3 steps):
+        step 0: select('pants (3640501)') [root]
+        step 1: relate('man,wearing,s (1548204)') [deps: [0]]
+        step 2: choose rel('woman,to the right of|to the left of,s (1548206)') [deps: [1]]
+
+    Example 3 [choose×cat]:
+      question   : What piece of furniture is not small, the bed or the table?
+      answer     : 'bed'
+      fullAnswer : 'The bed is not small.'
+      imageId    : 2381360
+      program (3 steps):
+        step 0: select('furniture (1337202)') [root]
+        step 1: filter size('not(small)') [deps: [0]]
+        step 2: choose name('table|bed') [deps: [1]]
+
+  ── depth 4  (266 questions) ──────────────────────
+
+    Example 1 [choose×attr]:
+      question   : Is the wood chair on the sidewalk sitting or standing?
+      answer     : 'standing'
+      fullAnswer : 'The chair is standing.'
+      imageId    : 2410790
+      program (4 steps):
+        step 0: select('sidewalk (320388)') [root]
+        step 1: relate('chair,on,s (320389)') [deps: [0]]
+        step 2: filter material('wood') [deps: [1]]
+        step 3: choose pose('standing|sitting') [deps: [2]]
+
+    Example 2 [choose×rel]:
+      question   : Is the woman to the left or to the right of the reading person that is reading a newspaper?
+      answer     : 'right'
+      fullAnswer : 'The woman is to the right of the man.'
+      imageId    : 2399053
+      program (4 steps):
+        step 0: select('newspaper (419571)') [root]
+        step 1: relate('person,reading,s (419570)') [deps: [0]]
+        step 2: filter activity('reading') [deps: [1]]
+        step 3: choose rel('woman,to the right of|to the left of,s (419566)') [deps: [2]]
+
+    Example 3 [choose×attr]:
+      question   : Is the glass bowl on the coffee table empty or full?
+      answer     : 'empty'
+      fullAnswer : 'The bowl is empty.'
+      imageId    : 4867
+      program (4 steps):
+        step 0: select('coffee table (3588895)') [root]
+        step 1: relate('bowl,on,s (1563895)') [deps: [0]]
+        step 2: filter material('glass') [deps: [1]]
+        step 3: choose('empty|full') [deps: [2]]
+
+  ── depth 5  (1 questions) ──────────────────────
+
+    Example 1 [choose×rel]:
+      question   : What is the little kid to the left of the car riding, a zebra or a horse?
+      answer     : 'horse'
+      fullAnswer : 'The kid is riding a horse.'
+      imageId    : 2392665
+      program (5 steps):
+        step 0: select('car (478311)') [root]
+        step 1: relate('child,to the left of,s (478317)') [deps: [0]]
+        step 2: filter age('little') [deps: [1]]
+        step 3: relate('animal,riding,o (478304)') [deps: [2]]
+        step 4: choose name('horse|zebra') [deps: [3]]
+
+══════════════════════════════════════════════════════════════════════
+  STRUCTURAL TYPE: COMPARE
+  Depth distribution: depth 2: 469 (11%)  |  depth 3: 3,688 (89%)
+══════════════════════════════════════════════════════════════════════
+
+  ── depth 2  (469 questions) ──────────────────────
+
+    Example 1 [compare×attr]:
+      question   : Do all these people have the same gender?
+      answer     : 'no'
+      fullAnswer : 'No, they are both male and female.'
+      imageId    : 2363419
+      program (2 steps):
+        step 0: select('person (2675266,1804573,1900358,2400959,1900360)') [root]
+        step 1: same('gender') [deps: [0]]
+
+    Example 2 [compare×attr]:
+      question   : Are the animals of different types?
+      answer     : 'yes'
+      fullAnswer : 'Yes, they are cats and elephants.'
+      imageId    : 2388232
+      program (2 steps):
+        step 0: select('animal (4519686,4519679)') [root]
+        step 1: different('type') [deps: [0]]
+
+    Example 3 [compare×attr]:
+      question   : Are these animals of different types?
+      answer     : 'yes'
+      fullAnswer : 'Yes, they are horses and bulls.'
+      imageId    : 2349029
+      program (2 steps):
+        step 0: select('animal (877946,877948,877951)') [root]
+        step 1: different('type') [deps: [0]]
+
+  ── depth 3  (3,688 questions) ──────────────────────
+
+    Example 1 [compare×attr]:
+      question   : Is the cap different in color than the sign?
+      answer     : 'no'
+      fullAnswer : 'No, both the cap and the sign are black.'
+      imageId    : 2363419
+      program (3 steps):
+        step 0: select('cap (2108218)') [root]
+        step 1: select('sign (2393744) ') [root]
+        step 2: different color('') [deps: [0, 1]]
+
+    Example 2 [compare×attr]:
+      question   : Which is healthier, the muffin or the broccoli of the muffin?
+      answer     : 'broccoli'
+      fullAnswer : 'The broccoli is healthier than the muffin.'
+      imageId    : 2341708
+      program (3 steps):
+        step 0: select('broccoli (940431)') [root]
+        step 1: select('muffin (940430) ') [root]
+        step 2: choose healthier('') [deps: [0, 1]]
+
+    Example 3 [compare×attr]:
+      question   : What do the marker and the post have in common?
+      answer     : 'color'
+      fullAnswer : 'The color, both the marker and the post are white.'
+      imageId    : 2413209
+      program (3 steps):
+        step 0: select('marker (177848)') [root]
+        step 1: select('post (177850) ') [root]
+        step 2: common('') [deps: [0, 1]]

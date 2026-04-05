@@ -1,0 +1,291 @@
+============================================================
+SECTION 2: ALL RELATE LABELS BY FREQUENCY (validation)
+============================================================
+Total unique relate labels: 285
+   Count  Label
+--------------------------------------------------
+   12397  on
+    9855  to the left of
+    9640  to the right of
+    8334  wearing
+    4300  in front of
+    4150  in
+    2368  holding
+    1309  near
+    1212  behind
+    1173  of
+    1149  on top of
+    1071  sitting on
+     564  above
+     533  under
+     468  with
+     454  inside
+     368  standing on
+     357  below
+     341  looking at
+     329  next to
+     327  same color
+     290  carrying
+     282  lying on
+     256  standing in
+     247  by
+     245  riding
+     228  watching
+     214  at
+     206  using
+     191  eating
+     161  sitting in
+     157  covered by
+     156  walking on
+     155  hanging on
+     142  around
+     134  playing
+     114  hanging from
+     112  riding on
+     111  contain
+     110  covering
+     107  beside
+     105  filled with
+     104  full of
+     102  covered in
+      92  leaning on
+      80  covered with
+      78  playing with
+      76  pulled by
+      72  walking in
+      71  pulling
+      70  on the side of
+      70  sitting at
+      68  hitting
+      65  resting on
+      62  sitting on top of
+      61  surrounded by
+      61  reflected in
+      59  standing behind
+      59  touching
+      58  throwing
+      57  parked on
+      53  attached to
+      51  same material
+      50  lying in
+      49  cutting
+      46  leaning against
+      45  waiting for
+      44  surrounding
+      44  beneath
+      40  working on
+      39  underneath
+      39  lying on top of
+      37  catching
+      33  swinging
+      33  standing by
+      33  growing on
+      32  between
+      31  standing next to
+      30  connected to
+      30  driving on
+      30  coming from
+      30  driving
+      29  reading
+      29  hanging over
+      29  holding onto
+      28  crossing
+      28  facing
+      26  playing in
+      26  sleeping on
+      26  sitting next to
+      26  mounted on
+      24  talking on
+      23  leaning over
+      23  flying in
+      22  selling
+      22  running on
+      22  topped with
+      22  feeding
+      20  printed on
+      20  standing beside
+      19  standing near
+      19  walking with
+      19  sitting behind
+      19  parked near
+      19  perched on
+      18  leading
+      18  wrapped in
+      18  stacked on
+      18  pushing
+      18  on the back of
+      18  staring at
+      18  floating in
+      17  parked in
+      17  painted on
+      17  parked in front of
+      17  hanging above
+      17  grazing on
+      17  tied to
+      16  hanging off
+      16  swimming in
+      16  standing in front of
+      16  reaching for
+      16  chasing
+      15  drinking
+      14  looking in
+      14  walking down
+      14  eating from
+      14  typing on
+      14  serving
+      13  on the front of
+      13  parked behind
+      13  pushed by
+      13  hanging in
+      13  preparing
+      12  pointing at
+      12  flying
+      12  following
+      12  parked next to
+      12  parked by
+      12  coming out of
+      12  sitting near
+      12  opening
+      11  standing at
+      11  walking behind
+      11  talking to
+      11  boarding
+      11  standing against
+      11  walking by
+      10  followed by
+      10  driving down
+      10  running in
+      10  parked at
+      10  making
+      10  sitting beside
+      10  reflecting in
+      10  observing
+      10  sitting in front of
+       9  looking into
+       9  climbing
+       9  balancing on
+       9  picking up
+       9  lying next to
+       9  plugged into
+       9  going into
+       8  looking out
+       8  running through
+       8  sitting under
+       8  stuck on
+       8  playing on
+       8  jumping over
+       8  grabbing
+       8  about to hit
+       8  looking down at
+       8  standing on top of
+       7  grazing in
+       7  reflected on
+       7  approaching
+       7  piled on
+       7  looking through
+       7  stuck in
+       7  draped over
+       7  skiing on
+       7  worn on
+       7  parked along
+       7  biting
+       7  walking next to
+       7  walking near
+       7  chewing
+       6  walking along
+       6  eating in
+       6  drinking from
+       6  larger than
+       6  getting on
+       6  exiting
+       6  working in
+       6  hang from
+       6  over
+       6  walking through
+       6  wrapped around
+       6  helping
+       6  walking to
+       5  mounted to
+       5  floating on
+       5  trying to catch
+       5  sitting by
+       5  tying
+       5  on the edge of
+       5  smiling at
+       5  tossing
+       5  hung on
+       5  mixed with
+       5  wading in
+       5  chained to
+       5  leaving
+       5  flying over
+       4  jumping on
+       4  seen through
+       4  petting
+       4  same shape
+       4  washing
+       4  walking across
+       4  hugging
+       4  displayed on
+       4  licking
+       3  smelling
+       3  parked beside
+       3  traveling on
+       3  standing under
+       3  flying above
+       3  traveling down
+       3  kept in
+       3  decorated with
+       3  growing behind
+       3  close to
+       3  walking towards
+       3  guiding
+       3  walking into
+       3  going down
+       3  longer than
+       2  posing with
+       2  skating on
+       2  lying inside
+       2  scattered on
+       2  growing in
+       2  going through
+       2  dragging
+       2  cleaning
+       2  enclosing
+       2  entering
+       2  flying through
+       2  herding
+       2  kicking
+       2  running across
+       2  pouring
+       2  sitting around
+       2  falling off
+       2  higher than
+       2  along
+       2  on the other side of
+       1  moving
+       1  jumping in
+       1  walking toward
+       1  coming down
+       1  hanging out of
+       1  sitting with
+       1  hidden by
+       1  cooked in
+       1  sniffing
+       1  growing next to
+       1  growing along
+       1  riding in
+       1  blowing out
+       1  in between
+       1  drawn on
+       1  pointing to
+       1  on the bottom of
+       1  in the middle of
+       1  bigger than
+       1  jumping off
+       1  standing around
+       1  looking for
+       1  taller than
+       1  skiing in
+       1  walking past
+       1  sprinkled on

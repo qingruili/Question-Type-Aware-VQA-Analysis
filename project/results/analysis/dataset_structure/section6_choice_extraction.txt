@@ -1,0 +1,35 @@
+============================================================
+SECTION 6: CHOICE CANDIDATE EXTRACTION TEST
+============================================================
+choose/compare questions: 20,386
+  extraction success: 16,437 (80.6%)
+  extraction failure: 3,949 (19.4%)
+
+Example successes (first 5):
+  Q: Is it an indoors or outdoors scene?
+     → candidates: 'Is it an indoors' | 'outdoors scene'
+  Q: Is the curtain on the right side or on the left of the picture?
+     → candidates: 'Is the curtain on the right side' | 'on the left of the picture'
+  Q: Is this place a harbor or a beach?
+     → candidates: 'Is this place a harbor' | 'a beach'
+  Q: Does the boat to the left of the flag look small or large?
+     → candidates: 'Does the boat to the left of the flag look small' | 'large'
+  Q: On which side of the photo is the towel, the left or the right?
+     → candidates: 'the left' | 'the right'
+
+Example failures (first 15):
+  Do all these people have the same gender?
+  Is the cap different in color than the sign?
+  What do the marker and the post have in common?
+  Is the color of the pillow different than the color of the counter?
+  Is the pot made of the same material as the container?
+  What do both the hydrant and the flag have in common?
+  Do the seat and the cart have the same color?
+  Is the logo different in color than the sweatshirt?
+  What do both the stump and the fence have in common?
+  Do the hat and the bucket have the same color?
+  What do the blanket and the barrier have in common?
+  Do the cellphone and the star have the same color?
+  Does the shirt have a different color than the kite?
+  Is the color of the book the same as the bag?
+  Does the street lamp have a different color than the cloud?

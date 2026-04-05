@@ -1,0 +1,173 @@
+======================================================================
+ViLT OOV EXAMPLES (still OOV after normalization)
+Top 20 OOV answers with representative questions
+======================================================================
+
+GT (normalized): 'guy'  [323 questions]
+  [query×rel]  Q: Who is standing on the skateboard?
+  GT_raw='guy'  BLIP='man'  ViLT='boy'
+  [query×rel]  Q: Who is talking on the device in the middle of the picture?
+  GT_raw='guy'  BLIP='man'  ViLT='man'
+
+GT (normalized): 'computer mouse'  [133 questions]
+  [query×rel]  Q: What is under the monitor to the right of the computer?
+  GT_raw='computer mouse'  BLIP='keyboard'  ViLT='mouse'
+  [query×rel]  Q: What is the device under the monitor to the right of the speaker?
+  GT_raw='computer mouse'  BLIP='keyboard'  ViLT='keyboard'
+
+GT (normalized): 'material'  [103 questions]
+  [compare×attr]  Q: What do the computer desk and the chair have in common?
+  GT_raw='material'  BLIP='they are both black'  ViLT='color'
+  [compare×attr]  Q: What is common to the fence and the necklace?
+  GT_raw='material'  BLIP='they are both metal'  ViLT='chain'
+
+GT (normalized): 'bookcase'  [83 questions]
+  [query×rel]  Q: What kind of furniture is to the right of the screen?
+  GT_raw='bookcase'  BLIP='bed'  ViLT='bed'
+  [query×rel]  Q: What item of furniture is to the right of the television?
+  GT_raw='bookcase'  BLIP='bed'  ViLT='bed'
+
+GT (normalized): 't-shirt'  [75 questions]
+  [query×rel]  Q: What is the woman to the left of the bags wearing?
+  GT_raw='t-shirt'  BLIP='white shirt'  ViLT='dress'
+  [query×rel]  Q: What is the person that is to the left of the bananas wearing?
+  GT_raw='t-shirt'  BLIP='red shirt'  ViLT='shirt'
+
+GT (normalized): 'blond'  [71 questions]
+  [query×attr]  Q: Of which color is the hair?
+  GT_raw='blond'  BLIP='blonde'  ViLT='blonde'
+  [query×attr]  Q: What color is the woman's hair?
+  GT_raw='blond'  BLIP='gray'  ViLT='blonde'
+
+GT (normalized): 'cupboard'  [68 questions]
+  [query×rel]  Q: Which kind of furniture is left of the toilet?
+  GT_raw='cupboard'  BLIP='none'  ViLT='sink'
+  [query×rel]  Q: Which kind of furniture is the mirror in?
+  GT_raw='cupboard'  BLIP='dresser'  ViLT='dresser'
+
+GT (normalized): 'cloudless'  [66 questions]
+  [query×global]  Q: How is the weather?
+  GT_raw='cloudless'  BLIP='clear'  ViLT='sunny'
+  [query×global]  Q: What is the weather like?
+  GT_raw='cloudless'  BLIP='sunny'  ViLT='sunny'
+
+GT (normalized): 'path'  [63 questions]
+  [query×rel]  Q: Where are the bricks?
+  GT_raw='path'  BLIP='on ground'  ViLT='on ground'
+  [query×global]  Q: Which place is it?
+  GT_raw='path'  BLIP='park'  ViLT='park'
+
+GT (normalized): 'end table'  [53 questions]
+  [query×rel]  Q: Which kind of furniture is in the living room?
+  GT_raw='end table'  BLIP='couch'  ViLT='couch'
+  [query×rel]  Q: What is the piece of furniture that is to the left of the coffee table?
+  GT_raw='end table'  BLIP='couch'  ViLT='couch'
+
+GT (normalized): 'outfit'  [50 questions]
+  [choose×cat]  Q: Which kind of clothing is not gray, the sweater or the outfit?
+  GT_raw='outfit'  BLIP='sweater'  ViLT='jacket'
+  [query×cat]  Q: What kind of clothing isn't gray?
+  GT_raw='outfit'  BLIP='sweater'  ViLT='sweater'
+
+GT (normalized): 'skater'  [49 questions]
+  [query×rel]  Q: Who is riding on the skateboard?
+  GT_raw='skater'  BLIP='woman'  ViLT='man'
+  [query×rel]  Q: Who is riding on a skateboard?
+  GT_raw='skater'  BLIP='woman'  ViLT='man'
+
+GT (normalized): 'walkway'  [47 questions]
+  [query×global]  Q: Which place is it?
+  GT_raw='walkway'  BLIP='city'  ViLT='city'
+  [query×global]  Q: What place was the picture taken at?
+  GT_raw='walkway'  BLIP='city'  ViLT='park'
+
+GT (normalized): 'computer monitor'  [46 questions]
+  [query×rel]  Q: What type of device is to the right of the man?
+  GT_raw='computer monitor'  BLIP='computer'  ViLT='computer'
+  [query×rel]  Q: What kind of device is to the right of the computers?
+  GT_raw='computer monitor'  BLIP='computer'  ViLT='phone'
+
+GT (normalized): 'lying'  [46 questions]
+  [query×attr]  Q: What is the cow doing?
+  GT_raw='lying'  BLIP='laying down'  ViLT='laying down'
+  [query×attr]  Q: What is the white animal doing?
+  GT_raw='lying'  BLIP='laying down'  ViLT='laying down'
+
+GT (normalized): 'computer desk'  [45 questions]
+  [query×cat]  Q: What kind of furniture is not gray?
+  GT_raw='computer desk'  BLIP='chair'  ViLT='chair'
+  [query×rel]  Q: What is the name of the piece of furniture that is made of the same material as the chair on the right?
+  GT_raw='computer desk'  BLIP='chair'  ViLT='desk'
+
+GT (normalized): 'light brown'  [43 questions]
+  [choose×attr]  Q: Is the sand light brown or red?
+  GT_raw='light brown'  BLIP='brown'  ViLT='brown'
+  [choose×attr]  Q: Is the coffee table that is not long light brown or black?
+  GT_raw='light brown'  BLIP='light brown'  ViLT='brown'
+
+GT (normalized): 'short sleeved'  [39 questions]
+  [choose×attr]  Q: Is the shirt short sleeved or long sleeved?
+  GT_raw='short sleeved'  BLIP='short sleeved'  ViLT='short'
+  [choose×attr]  Q: Is the shirt that looks red long sleeved or is it short sleeved?
+  GT_raw='short sleeved'  BLIP='short sleeved'  ViLT='short'
+
+GT (normalized): 'side table'  [37 questions]
+  [query×rel]  Q: What kind of furniture is to the right of the couch?
+  GT_raw='side table'  BLIP='table'  ViLT='table'
+  [query×rel]  Q: What is the piece of furniture that is to the right of the table?
+  GT_raw='side table'  BLIP='bench'  ViLT='bench'
+
+GT (normalized): 'countertop'  [37 questions]
+  [query×rel]  Q: The knife is on what?
+  GT_raw='countertop'  BLIP='cutting board'  ViLT='cutting board'
+  [query×rel]  Q: What is the knife on?
+  GT_raw='countertop'  BLIP='cutting board'  ViLT='cutting board'
+
+======================================================================
+EXAMPLES FIXED BY NORMALIZATION (OOV before, in-vocab after)
+======================================================================
+
+  raw='cloths'  →  norm='cloth'  [rule: depluralize]
+  Q: What sits on the bowl?  [query×rel]
+
+  raw='monitors'  →  norm='monitor'  [rule: depluralize]
+  Q: What kind of device is silver?  [query×cat]
+
+  raw='water bottles'  →  norm='water bottle'  [rule: depluralize]
+  Q: What is on the table?  [query×rel]
+
+  raw='word'  →  norm='word'  [rule: other]
+  Q: What is on the blue sign?  [query×rel]
+
+  raw='sandal'  →  norm='sandal'  [rule: other]
+  Q: What is the person to the left of the trash bin wearing?  [query×rel]
+
+  raw='utensil'  →  norm='utensil'  [rule: other]
+  Q: What's located on top of the napkin?  [query×rel]
+
+  raw='tennis balls'  →  norm='tenni ball'  [rule: depluralize]
+  Q: What is the basket filled with?  [query×rel]
+
+  raw='trays'  →  norm='tray'  [rule: depluralize]
+  Q: The baked goods are on what?  [query×rel]
+
+  raw='giant'  →  norm='giant'  [rule: other]
+  Q: How big is the tunnel?  [query×attr]
+
+  raw='drawers'  →  norm='drawer'  [rule: depluralize]
+  Q: Which kind of furniture is to the left of the table?  [query×rel]
+
+  raw='number'  →  norm='number'  [rule: other]
+  Q: What is draped over the horse?  [query×rel]
+
+  raw='letter'  →  norm='letter'  [rule: other]
+  Q: What do you think is on the wall that looks gray?  [query×rel]
+
+  raw='candies'  →  norm='candy'  [rule: depluralize]
+  Q: What food is in the bowl?  [query×rel]
+
+  raw='berry'  →  norm='berry'  [rule: other]
+  Q: What fruit is to the left of the pink box?  [query×rel]
+
+  raw='cords'  →  norm='cord'  [rule: depluralize]
+  Q: What's plugged into the outlets?  [query×rel]

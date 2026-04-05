@@ -1,0 +1,16 @@
+structural,semantic,n,oov_raw_n,oov_raw_pct,oov_norm_n,oov_norm_pct,fixed_by_norm
+choose,attr,8488,307,3.62,303,3.57,4
+choose,cat,1431,55,3.84,51,3.56,4
+choose,global,556,9,1.62,9,1.62,0
+choose,rel,5754,7,0.12,7,0.12,0
+compare,attr,4157,115,2.77,115,2.77,0
+logical,attr,3411,0,0.00,0,0.00,0
+logical,obj,12685,0,0.00,0,0.00,0
+query,attr,18092,365,2.02,359,1.98,6
+query,cat,7185,491,6.83,454,6.32,37
+query,global,2612,266,10.18,266,10.18,0
+query,rel,40278,2822,7.01,2434,6.04,388
+verify,attr,8053,0,0.00,0,0.00,0
+verify,global,879,0,0.00,0,0.00,0
+verify,obj,2879,0,0.00,0,0.00,0
+verify,rel,15602,0,0.00,0,0.00,0

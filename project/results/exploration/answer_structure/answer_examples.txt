@@ -1,0 +1,403 @@
+================================================================================
+GQA ANSWER STRUCTURE: ANNOTATED EXAMPLES PER CELL
+================================================================================
+
+Each question has exactly ONE ground-truth answer (a short string).
+Fields shown per example:
+  question    : the natural language question
+  answer      : the GT answer (what models must match)
+  fullAnswer  : a full sentence form of the answer
+  annotations : scene-graph object IDs referenced by answer/question
+  program     : the functional program (semantic field)
+
+
+──────────────────────────────────────────────────────────────────────
+  CELL: QUERY × REL   (n=40,278, unique_answers=1,199)
+  Top-3 answers: [('man', 1511), ('woman', 1038), ('chair', 807)]
+──────────────────────────────────────────────────────────────────────
+
+  Example 1:
+    question   : Who is wearing pants?
+    answer     : 'man'
+    fullAnswer : 'The man is wearing pants.'
+    imageId    : 2372640
+    annotations: {'answer': ['0'], 'question': ['3'], 'fullAnswer': ['1', '4']}
+    program    : select('pants (1796037)') → relate('person,wearing,s
+                 (2527953)') → query('name')
+
+  Example 2:
+    question   : Which direction is the woman to the left of the chair looking at?
+    answer     : 'behind'
+    fullAnswer : 'The woman is looking behind.'
+    imageId    : 2384558
+    annotations: {'question': ['10', '4'], 'fullAnswer': ['1']}
+    program    : select('chair (525991)') → relate('woman,to the left
+                 of,s (525977)') → relate('direction,looking at,o
+                 (-)') → query('name')
+
+  Example 3:
+    question   : Where is the woman to the right of the man looking at?
+    answer     : 'at the camera'
+    fullAnswer : 'The woman is looking at the camera.'
+    imageId    : 2401506
+    annotations: {'question': ['9', '3'], 'fullAnswer': ['1']}
+    program    : select('man (398688)') → relate('woman,to the right
+                 of,s (398697)') → relate('direction,looking at,o
+                 (-)') → query('name')
+
+──────────────────────────────────────────────────────────────────────
+  CELL: QUERY × ATTR   (n=18,092, unique_answers=127)
+  Top-3 answers: [('left', 3295), ('right', 3207), ('white', 1189)]
+──────────────────────────────────────────────────────────────────────
+
+  Example 1:
+    question   : Which side of the photo is the knife on?
+    answer     : 'left'
+    fullAnswer : 'The knife is on the left of the image.'
+    imageId    : 2402467
+    annotations: {'question': ['7'], 'fullAnswer': ['1']}
+    program    : select('knife (1135762)') → query('hposition')
+
+  Example 2:
+    question   : Which texture is the hair?
+    answer     : 'fine'
+    fullAnswer : 'The hair is fine.'
+    imageId    : 2357718
+    annotations: {'question': ['4'], 'fullAnswer': ['1']}
+    program    : select('hair (3551646)') → query('texture')
+
+  Example 3:
+    question   : What is she doing?
+    answer     : 'taking a picture'
+    fullAnswer : 'The lady is taking a picture.'
+    imageId    : 2321556
+    annotations: {'question': ['2'], 'fullAnswer': ['1']}
+    program    : select('she (3369731)') → query('length')
+
+──────────────────────────────────────────────────────────────────────
+  CELL: QUERY × CAT   (n=7,185, unique_answers=370)
+  Top-3 answers: [('table', 305), ('chair', 245), ('cat', 231)]
+──────────────────────────────────────────────────────────────────────
+
+  Example 1:
+    question   : Which kind of furniture is made of wood?
+    answer     : 'table'
+    fullAnswer : 'The furniture is a table.'
+    imageId    : 2351795
+    annotations: {'answer': ['0'], 'question': ['3'], 'fullAnswer': ['1', '4']}
+    program    : select('furniture (2573707)') → filter
+                 material('wood') → query('name')
+
+  Example 2:
+    question   : What kind of animal is not white?
+    answer     : 'dragon'
+    fullAnswer : 'The animal is a dragon.'
+    imageId    : 2360103
+    annotations: {'answer': ['0'], 'question': ['3'], 'fullAnswer': ['1', '4']}
+    program    : select('animal (1975792)') → filter
+                 color('not(white)') → query('name')
+
+  Example 3:
+    question   : What device is not on?
+    answer     : 'remote control'
+    fullAnswer : 'The device is a remote control.'
+    imageId    : 2399127
+    annotations: {'answer': ['0:2'], 'question': ['1'], 'fullAnswer': ['1', '4:6']}
+    program    : select('device (418896)') → filter('not(on)') →
+                 query('name')
+
+──────────────────────────────────────────────────────────────────────
+  CELL: QUERY × GLOBAL   (n=2,612, unique_answers=93)
+  Top-3 answers: [('street', 221), ('field', 195), ('ocean', 169)]
+──────────────────────────────────────────────────────────────────────
+
+  Example 1:
+    question   : What is the photo showing?
+    answer     : 'street'
+    fullAnswer : 'It is showing a street.'
+    imageId    : 2336562
+    annotations: {}
+    program    : select('scene') → query('place')
+
+  Example 2:
+    question   : Which place is it?
+    answer     : 'village'
+    fullAnswer : 'It is a village.'
+    imageId    : 2411995
+    annotations: {}
+    program    : select('scene') → query('place')
+
+  Example 3:
+    question   : Which place is it?
+    answer     : 'gas station'
+    fullAnswer : 'It is a gas station.'
+    imageId    : 2354563
+    annotations: {}
+    program    : select('scene') → query('place')
+
+──────────────────────────────────────────────────────────────────────
+  CELL: VERIFY × REL   (n=15,602, unique_answers=2)
+  Top-3 answers: [('no', 7908), ('yes', 7694)]
+──────────────────────────────────────────────────────────────────────
+
+  Example 1:
+    question   : Does the man ride a horse?
+    answer     : 'no'
+    fullAnswer : 'No, the man rides a bike.'
+    imageId    : 2372693
+    annotations: {'question': ['2'], 'fullAnswer': ['2', '4:6']}
+    program    : select('man (1927215)') → verify rel('horse,riding,o
+                 (-)')
+
+  Example 2:
+    question   : Are there napkins under the utensil to the left of the rice?
+    answer     : 'yes'
+    fullAnswer : 'Yes, there is a napkin under the utensil.'
+    imageId    : 1339
+    annotations: {'question': ['11', '2', '5'], 'fullAnswer': ['4', '7']}
+    program    : select('rice (1066932)') → relate('utensil,to the
+                 left of,s (1066923)') → relate('napkin,under,s
+                 (1066926)') → exist('?')
+
+──────────────────────────────────────────────────────────────────────
+  CELL: VERIFY × ATTR   (n=8,053, unique_answers=2)
+  Top-3 answers: [('no', 4051), ('yes', 4002)]
+──────────────────────────────────────────────────────────────────────
+
+  Example 1:
+    question   : Does the knife next to the fork look black?
+    answer     : 'no'
+    fullAnswer : 'No, the knife is silver.'
+    imageId    : 2378087
+    annotations: {'question': ['2', '6'], 'fullAnswer': ['2']}
+    program    : select('fork (715246)') → relate('knife,next to,s
+                 (715248)') → verify color('black')
+
+  Example 2:
+    question   : Does the person to the left of the man appear to be sitting?
+    answer     : 'yes'
+    fullAnswer : 'Yes, the woman is sitting.'
+    imageId    : 2317756
+    annotations: {'question': ['8', '2'], 'fullAnswer': ['2']}
+    program    : select('man (1017651)') → relate('person,to the left
+                 of,s (1017653)') → verify pose('sitting')
+
+──────────────────────────────────────────────────────────────────────
+  CELL: VERIFY × OBJ   (n=2,879, unique_answers=2)
+  Top-3 answers: [('yes', 1463), ('no', 1416)]
+──────────────────────────────────────────────────────────────────────
+
+  Example 1:
+    question   : Is there a mirror in this scene?
+    answer     : 'yes'
+    fullAnswer : 'Yes, there is a mirror.'
+    imageId    : 2374558
+    annotations: {'question': ['3'], 'fullAnswer': ['4']}
+    program    : select('mirror (2135429)') → exist('?')
+
+  Example 2:
+    question   : Is there a computer in this photo?
+    answer     : 'no'
+    fullAnswer : 'No, there are no computers.'
+    imageId    : 2334847
+    annotations: {}
+    program    : select('computer (-)') → exist('?')
+
+──────────────────────────────────────────────────────────────────────
+  CELL: VERIFY × GLOBAL   (n=879, unique_answers=2)
+  Top-3 answers: [('no', 469), ('yes', 410)]
+──────────────────────────────────────────────────────────────────────
+
+  Example 1:
+    question   : Is it outdoors?
+    answer     : 'no'
+    fullAnswer : 'No, it is indoors.'
+    imageId    : 2396868
+    annotations: {}
+    program    : select('scene') → verify location('outdoors')
+
+──────────────────────────────────────────────────────────────────────
+  CELL: LOGICAL × ATTR   (n=3,411, unique_answers=2)
+  Top-3 answers: [('yes', 1741), ('no', 1670)]
+──────────────────────────────────────────────────────────────────────
+
+  Example 1:
+    question   : Is the shirt sleeveless and white?
+    answer     : 'yes'
+    fullAnswer : 'Yes, the shirt is sleeveless and white.'
+    imageId    : 2393663
+    annotations: {'question': ['2'], 'fullAnswer': ['2']}
+    program    : select('shirt (1217956)') → verify('sleeveless') →
+                 verify color('white ') → and('')
+
+  Example 2:
+    question   : Is the plate of the table both dirty and silver?
+    answer     : 'no'
+    fullAnswer : 'No, the plate is dirty but red.'
+    imageId    : 2346114
+    annotations: {'question': ['2', '5'], 'fullAnswer': ['2']}
+    program    : select('table (902362)') → relate('plate,of,s
+                 (902357)') → verify cleanliness('dirty') → verify
+                 color('silver ') → and('')
+
+──────────────────────────────────────────────────────────────────────
+  CELL: LOGICAL × OBJ   (n=12,685, unique_answers=2)
+  Top-3 answers: [('yes', 6610), ('no', 6075)]
+──────────────────────────────────────────────────────────────────────
+
+  Example 1:
+    question   : Are there both plates and forks in this picture?
+    answer     : 'yes'
+    fullAnswer : 'Yes, there are both a fork and a plate.'
+    imageId    : 2337344
+    annotations: {'question': ['3', '5'], 'fullAnswer': ['5']}
+    program    : select('fork (958012)') → exist('?') → select('plate
+                 (958006) ') → exist('?') → and('')
+
+──────────────────────────────────────────────────────────────────────
+  CELL: CHOOSE × REL   (n=5,754, unique_answers=110)
+  Top-3 answers: [('left', 2617), ('right', 2597), ('front', 54)]
+──────────────────────────────────────────────────────────────────────
+
+  Example 1:
+    question   : Is the faucet to the right or to the left of the toilet?
+    answer     : 'left'
+    fullAnswer : 'The faucet is to the left of the toilet.'
+    imageId    : 2359040
+    annotations: {'question': ['2', '12'], 'fullAnswer': ['1', '8']}
+    program    : select('toilet (796689)') → choose rel('faucet,to the
+                 left of|to the right of,s (796686)')
+
+  Example 2:
+    question   : What is the lamp on, a side table or a nightstand?
+    answer     : 'side table'
+    fullAnswer : 'The lamp is on a side table.'
+    imageId    : 2326282
+    annotations: {'answer': ['0:2'], 'question': ['3', '6:8'], 'fullAnswer': ['1', '5:7']}
+    program    : select('lamp (982812)') → relate('furniture,on,o
+                 (982817)') → choose name('side table|nightstand')
+
+──────────────────────────────────────────────────────────────────────
+  CELL: CHOOSE × ATTR   (n=8,488, unique_answers=222)
+  Top-3 answers: [('bottom', 1260), ('top', 1099), ('right', 1006)]
+──────────────────────────────────────────────────────────────────────
+
+  Example 1:
+    question   : Is the banana in the bottom part or in the top of the picture?
+    answer     : 'bottom'
+    fullAnswer : 'The banana is in the bottom of the image.'
+    imageId    : 2320739
+    annotations: {'question': ['2'], 'fullAnswer': ['1']}
+    program    : select('banana (3433624)') → choose
+                 vposition('bottom|top')
+
+  Example 2:
+    question   : Is the palm tree unhealthy or healthy?
+    answer     : 'healthy'
+    fullAnswer : 'The palm tree is healthy.'
+    imageId    : 2361439
+    annotations: {'question': ['2:4'], 'fullAnswer': ['1:3']}
+    program    : select('palm tree (1739782)') →
+                 choose('healthy|unhealthy')
+
+  Example 3:
+    question   : Is the striped shirt colorful or black and white?
+    answer     : 'black and white'
+    fullAnswer : 'The shirt is black and white.'
+    imageId    : 2361272
+    annotations: {'question': ['2:4'], 'fullAnswer': ['1']}
+    program    : select('shirt (3755910)') → filter pattern('striped')
+                 → choose('black and white|colorful')
+
+──────────────────────────────────────────────────────────────────────
+  CELL: CHOOSE × CAT   (n=1,431, unique_answers=243)
+  Top-3 answers: [('bed', 93), ('train', 59), ('table', 53)]
+──────────────────────────────────────────────────────────────────────
+
+  Example 1:
+    question   : What piece of furniture is not small, the bed or the table?
+    answer     : 'bed'
+    fullAnswer : 'The bed is not small.'
+    imageId    : 2381360
+    annotations: {'answer': ['0'], 'question': ['11', '8', '1:4'], 'fullAnswer': ['1']}
+    program    : select('furniture (1337202)') → filter
+                 size('not(small)') → choose name('table|bed')
+
+  Example 2:
+    question   : Is this a fork or a spoon?
+    answer     : 'spoon'
+    fullAnswer : 'This is a spoon.'
+    imageId    : 2386128
+    annotations: {'answer': ['0'], 'question': ['6'], 'fullAnswer': ['3']}
+    program    : select('this (683711)') → choose name('spoon|fork')
+
+  Example 3:
+    question   : Is this a traffic light or a fire hydrant?
+    answer     : 'fire hydrant'
+    fullAnswer : 'This is a fire hydrant.'
+    imageId    : 2352009
+    annotations: {'answer': ['0:2'], 'question': ['7:9'], 'fullAnswer': ['3:5']}
+    program    : select('this (856671)') → choose name('fire
+                 hydrant|traffic light')
+
+──────────────────────────────────────────────────────────────────────
+  CELL: CHOOSE × GLOBAL   (n=556, unique_answers=37)
+  Top-3 answers: [('outdoors', 191), ('indoors', 161), ('field', 31)]
+──────────────────────────────────────────────────────────────────────
+
+  Example 1:
+    question   : Is it indoors or outdoors?
+    answer     : 'outdoors'
+    fullAnswer : 'It is outdoors.'
+    imageId    : 2358744
+    annotations: {}
+    program    : select('scene') → choose location('outdoors|indoors')
+
+  Example 2:
+    question   : Is this an image of a park or a farm?
+    answer     : 'farm'
+    fullAnswer : 'It is showing a farm.'
+    imageId    : 2342360
+    annotations: {}
+    program    : select('scene') → choose place('farm|park')
+
+  Example 3:
+    question   : Is the picture showing the parking lot or the garage?
+    answer     : 'parking lot'
+    fullAnswer : 'It is showing the parking lot.'
+    imageId    : 2406473
+    annotations: {}
+    program    : select('scene') → choose place('parking lot|garage')
+
+──────────────────────────────────────────────────────────────────────
+  CELL: COMPARE × ATTR   (n=4,157, unique_answers=46)
+  Top-3 answers: [('no', 1682), ('yes', 1559), ('color', 575)]
+──────────────────────────────────────────────────────────────────────
+
+  Example 1:
+    question   : Do all these people have the same gender?
+    answer     : 'no'
+    fullAnswer : 'No, they are both male and female.'
+    imageId    : 2363419
+    annotations: {}
+    program    : select('person
+                 (2675266,1804573,1900358,2400959,1900360)') →
+                 same('gender')
+
+  Example 2:
+    question   : Which is healthier, the muffin or the broccoli of the muffin?
+    answer     : 'broccoli'
+    fullAnswer : 'The broccoli is healthier than the muffin.'
+    imageId    : 2341708
+    annotations: {'answer': ['0'], 'question': ['10', '4', '7'], 'fullAnswer': ['1', '6']}
+    program    : select('broccoli (940431)') → select('muffin (940430)
+                 ') → choose healthier('')
+
+  Example 3:
+    question   : Which are less healthy, the tomatoes or the hot dog?
+    answer     : 'hot dog'
+    fullAnswer : 'The hot dog are less healthy than the tomatoes.'
+    imageId    : 2320089
+    annotations: {'answer': ['0:2'], 'question': ['8:10', '5'], 'fullAnswer': ['8', '1:3']}
+    program    : select('tomatoes (3219951)') → select('hot dog
+                 (3943867) ') → choose less healthy('')

@@ -1,0 +1,52 @@
+ViLT OOV Analysis Summary
+Generated from: all_predictions.jsonl
+Total questions: 132,062
+ViLT raw label set size: 3,129
+
+=== BEFORE NORMALIZATION ===
+Unique GT answer types:         1,469
+OOV answer types (not in ViLT): 449  (30.6% of types)
+Questions with OOV GT:          4,437  (3.4% of questions)
+
+=== AFTER NORMALIZATION (rules 1-6) ===
+Unique normalized GT types:     1,255
+OOV normalized types:           360  (28.7% of types)
+Questions with OOV norm GT:     3,998  (3.0% of questions)
+
+=== IMPROVEMENT FROM NORMALIZATION ===
+Answer types recovered:         89
+Questions now answerable:       439
+Questions still OOV:            3,998  (3.0%)
+
+=== CELLS WITH HIGHEST OOV RATE (after normalization) ===
+  query×global   10.2%  (266 questions)
+  query×cat      6.3%  (454 questions)
+  query×rel      6.0%  (2434 questions)
+  choose×attr     3.6%  (303 questions)
+  choose×cat      3.6%  (51 questions)
+
+=== CELLS WITH ZERO OOV ===
+  logical×attr
+  logical×obj
+  verify×attr
+  verify×global
+  verify×obj
+  verify×rel
+
+=== RULE EFFECTIVENESS (answer types recovered by each rule) ===
+  depluralize          39 answer types
+  other                28 answer types
+
+=== INTERPRETATION ===
+The OOV problem is concentrated in open-vocab cells (query×rel, query×cat,
+query×global, compare×attr). Binary-answer cells (verify×*, logical×*) have
+zero OOV since "yes" and "no" are always in the ViLT label set.
+
+The key insight is that the OOV rate by *question count* (3-4%) is much lower
+than the OOV rate by *answer type* (30%+), because OOV answers tend to be
+long-tail, low-frequency answers. Most questions ask about common objects and
+attributes that ARE covered by ViLT's VQAv2-derived vocabulary.
+
+Normalization (rules 1-6) recovers a small fraction of OOV cases. The remaining
+OOV questions (after normalization) represent a structural ceiling for ViLT that
+cannot be addressed without retraining or expanding the label set.

@@ -1,0 +1,43 @@
+============================================================
+SECTION 4: ANSWER GROUP (groups.global) COVERAGE FOR QUERY QUESTIONS
+============================================================
+Overall: 60,212 / 68,167 (88.3%)
+
+By semantic type:
+  query×rel: 38,904 / 40,278 (96.6%)
+  query×attr: 11,550 / 18,092 (63.8%)
+  query×cat: 7,182 / 7,185 (100.0%)
+  query×global: 2,576 / 2,612 (98.6%)
+
+Unique groups.global values: 84
+Top 30 most common groups:
+    7726  color
+    7345  person
+    6065  furniture
+    4415  animal
+    3329  clothing
+    3318  object
+    3120  device
+    2914  vehicle
+    2629  place
+    2114  thing
+    1704  material
+    1678  vegetable
+    1116  food
+    1055  appliance
+     867  size
+     655  fruit
+     638  road
+     522  baked good
+     518  urban environment
+     511  fast food
+     447  plant
+     442  tree
+     365  meat
+     363  cooking utensil
+     338  liquid
+     318  nature environment
+     309  sign
+     281  weather
+     273  activity
+     270  pose

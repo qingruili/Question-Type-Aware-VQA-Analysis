@@ -1,0 +1,46 @@
+# GQA Preliminary Analysis - Requirements
+# Install with: pip install -r requirements.txt
+#
+# If you are using a conda environment, activate it first.
+# If you are on a Mac with Apple Silicon (M1/M2/M3), see notes below.
+
+# ── Core ML / Model Loading ──────────────────────────────────────────────────
+transformers>=4.35.0
+torch>=2.0.0
+torchvision>=0.15.0
+
+# ── Image Processing ─────────────────────────────────────────────────────────
+Pillow>=9.0.0
+
+# ── Data & Analysis ──────────────────────────────────────────────────────────
+pandas>=1.5.0
+numpy>=1.23.0
+
+# ── Visualization ────────────────────────────────────────────────────────────
+matplotlib>=3.6.0
+seaborn>=0.12.0
+
+# ── Utilities ────────────────────────────────────────────────────────────────
+tqdm>=4.64.0
+scipy>=1.9.0
+
+# ── Notes ────────────────────────────────────────────────────────────────────
+#
+# PyTorch installation:
+#   The torch/torchvision lines above work for CPU-only and CUDA (Linux/Windows).
+#   If you want GPU support on Linux with CUDA 11.8:
+#     pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+#   If you want GPU support on Linux with CUDA 12.1:
+#     pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+#
+# Apple Silicon (M1/M2/M3 Mac):
+#   pip install torch torchvision
+#   MPS (Metal) acceleration will be used automatically if available.
+#   The models will still run on CPU if MPS causes issues — just slower.
+#
+# Hugging Face model downloads:
+#   The two models will be downloaded automatically on first run:
+#     - Salesforce/blip-vqa-base       (~900 MB)
+#     - dandelin/vilt-b32-finetuned-vqa (~500 MB)
+#   They are cached in ~/.cache/huggingface/ after the first download.
+#   Make sure you have ~1.5 GB of free space before starting.

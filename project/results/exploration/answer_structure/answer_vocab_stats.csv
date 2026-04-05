@@ -1,0 +1,16 @@
+structural,semantic,n_questions,n_unique_answers,top5_answers,answer_entropy
+choose,attr,8488,222,bottom(1260); top(1099); right(1006); left(992); black(359),4.896707314001326
+choose,cat,1431,243,bed(93); train(59); table(53); bus(47); couch(44),6.806501402274567
+choose,global,556,37,outdoors(191); indoors(161); field(31); beach(20); park(14),3.268939399745835
+choose,rel,5754,110,left(2617); right(2597); front(54); behind(53); table(48),1.8761839325799405
+compare,attr,4157,46,no(1682); yes(1559); color(575); material(103); boy(47),2.0612290012872485
+logical,attr,3411,2,yes(1741); no(1670),0.9996874430452043
+logical,obj,12685,2,yes(6610); no(6075),0.998716487831248
+query,attr,18092,127,left(3295); right(3207); white(1189); black(1160); blue(866),4.563363726913458
+query,cat,7185,370,table(305); chair(245); cat(231); bed(191); shirt(191),7.096343145508819
+query,global,2612,93,street(221); field(195); ocean(169); road(130); beach(98),5.623728979939731
+query,rel,40278,1199,man(1511); woman(1038); chair(807); boy(772); girl(694),8.54170553434058
+verify,attr,8053,2,no(4051); yes(4002),0.9999732930689592
+verify,global,879,2,no(469); yes(410),0.9967476491514309
+verify,obj,2879,2,yes(1463); no(1416),0.9998077456293843
+verify,rel,15602,2,no(7908); yes(7694),0.9998642858405395

@@ -1,0 +1,38 @@
+Target Object Size vs Accuracy
+Coverage: 118613/132062 (89.8%)
+Tercile thresholds: p33=0.0226  p67=0.1415
+
+Correlation: Pearson r=0.0620 p=2.379e-101  |  Spearman rho=0.0690 p=3.263e-125
+
+--- overall_by_size ---
+          accuracy      n
+size_bin                 
+small     0.497975  39498
+medium    0.524850  39617
+large     0.576890  39498
+
+--- structural_x_size ---
+size_bin    small  medium  large
+structural                      
+choose      0.585   0.579  0.664
+compare     0.480   0.448  0.469
+logical     0.501   0.523  0.540
+query       0.396   0.442  0.509
+verify      0.666   0.707  0.767
+
+--- semantic_x_size ---
+size_bin  small  medium  large
+semantic                      
+attr      0.551   0.576  0.626
+cat       0.147   0.418  0.669
+obj       0.515   0.519  0.479
+rel       0.463   0.498  0.541
+
+--- depth_x_size ---
+size_bin   small  medium  large
+depth_bin                      
+2          0.575   0.619  0.702
+3          0.460   0.490  0.548
+4          0.488   0.504  0.556
+≥5         0.478   0.486  0.477
+

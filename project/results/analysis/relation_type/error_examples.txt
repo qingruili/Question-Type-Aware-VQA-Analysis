@@ -1,0 +1,1215 @@
+==============================================================================
+EXPERIMENT 1 — QUERY×REL EXAMPLES: SPATIAL vs ACTION
+Program annotation: ◀ RELATE marks each relation hop; ◀ QUERY = final answer
+==============================================================================
+
+──────────────────────────────────────────────────────────────────────────────
+  SPATIAL — CORRECT predictions  (pool n=10,782)
+──────────────────────────────────────────────────────────────────────────────
+
+  Example 1
+  Question  : What vehicle is to the right of the house?
+  GT answer : train
+  BLIP answer: train
+  Result    : ✓ CORRECT
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: house (1130647)->relate: vehicle,to the right of,s (1130632) [0]->query: name [1]
+  Annotated :
+    [0] select: house (1130647)   ◀ SELECT (start)
+    [1] relate: vehicle,to the right of,s (1130632) [deps:[0]]  ◀ RELATE op #1: "to the right of"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 2
+  Question  : What is on the table?
+  GT answer : wine glasses
+  BLIP answer: wine glasses
+  Result    : ✓ CORRECT
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: table (2719127)->relate: _,on,s (2943682) [0]->query: name [1]
+  Annotated :
+    [0] select: table (2719127)   ◀ SELECT (start)
+    [1] relate: _,on,s (2943682) [deps:[0]]  ◀ RELATE op #1: "on"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 3
+  Question  : What is the animal to the right of the girl?
+  GT answer : dog
+  BLIP answer: dog
+  Result    : ✓ CORRECT
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: girl (1728812)->relate: animal,to the right of,s (2017800) [0]->query: name [1]
+  Annotated :
+    [0] select: girl (1728812)   ◀ SELECT (start)
+    [1] relate: animal,to the right of,s (2017800) [deps:[0]]  ◀ RELATE op #1: "to the right of"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 4
+  Question  : What animal is the fence in front of?
+  GT answer : cows
+  BLIP answer: cow
+  Result    : ✓ CORRECT
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: fence (1306476)->relate: animal,in front of,o (1306477) [0]->query: name [1]
+  Annotated :
+    [0] select: fence (1306476)   ◀ SELECT (start)
+    [1] relate: animal,in front of,o (1306477) [deps:[0]]  ◀ RELATE op #1: "in front of"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 5
+  Question  : What is the man in front of?
+  GT answer : urinal
+  BLIP answer: urinals
+  Result    : ✓ CORRECT
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: man (793525)->relate: _,in front of,o (793517) [0]->query: name [1]
+  Annotated :
+    [0] select: man (793525)   ◀ SELECT (start)
+    [1] relate: _,in front of,o (793517) [deps:[0]]  ◀ RELATE op #1: "in front of"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 6
+  Question  : What is the vehicle to the left of the chairs that are made of wood?
+  GT answer : bus
+  BLIP answer: bus
+  Result    : ✓ CORRECT
+  Rel type  : spatial   depth=4  n_relate_ops=1
+  Program   : select: chairs (277507)->filter material: wood [0]->relate: vehicle,to the left of,s (277502) [1]->query: name [2]
+  Annotated :
+    [0] select: chairs (277507)   ◀ SELECT (start)
+    [1] filter material: wood [deps:[0]]
+    [2] relate: vehicle,to the left of,s (277502) [deps:[1]]  ◀ RELATE op #2: "to the left of"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 7
+  Question  : What kind of animal is to the right of the chair?
+  GT answer : cat
+  BLIP answer: cat
+  Result    : ✓ CORRECT
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: chair (1360247)->relate: animal,to the right of,s (1360243) [0]->query: name [1]
+  Annotated :
+    [0] select: chair (1360247)   ◀ SELECT (start)
+    [1] relate: animal,to the right of,s (1360243) [deps:[0]]  ◀ RELATE op #1: "to the right of"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 8
+  Question  : The sculpture is on what?
+  GT answer : shelf
+  BLIP answer: shelf
+  Result    : ✓ CORRECT
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: sculpture (963752)->relate: _,on,o (963753) [0]->query: name [1]
+  Annotated :
+    [0] select: sculpture (963752)   ◀ SELECT (start)
+    [1] relate: _,on,o (963753) [deps:[0]]  ◀ RELATE op #1: "on"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 9
+  Question  : What is the food on the food that is on the plate called?
+  GT answer : egg
+  BLIP answer: egg
+  Result    : ✓ CORRECT
+  Rel type  : spatial   depth=4  n_relate_ops=2
+  Program   : select: plate (2271338)->relate: food,on,s (2502237) [0]->relate: food,on,s (2481188) [1]->query: name [2]
+  Annotated :
+    [0] select: plate (2271338)   ◀ SELECT (start)
+    [1] relate: food,on,s (2502237) [deps:[0]]  ◀ RELATE op #1: "on"
+    [2] relate: food,on,s (2481188) [deps:[1]]  ◀ RELATE op #2: "on"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 10
+  Question  : What is the vehicle on the street?
+  GT answer : bus
+  BLIP answer: bus
+  Result    : ✓ CORRECT
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: street (4085966)->relate: vehicle,on,s (4143598) [0]->query: name [1]
+  Annotated :
+    [0] select: street (4085966)   ◀ SELECT (start)
+    [1] relate: vehicle,on,s (4143598) [deps:[0]]  ◀ RELATE op #1: "on"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 11
+  Question  : What kind of animal is to the left of the fence?
+  GT answer : sheep
+  BLIP answer: sheep
+  Result    : ✓ CORRECT
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: fence (2356116)->relate: animal,to the left of,s (2658373) [0]->query: name [1]
+  Annotated :
+    [0] select: fence (2356116)   ◀ SELECT (start)
+    [1] relate: animal,to the left of,s (2658373) [deps:[0]]  ◀ RELATE op #1: "to the left of"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 12
+  Question  : What is in the vase?
+  GT answer : flowers
+  BLIP answer: flower
+  Result    : ✓ CORRECT
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: vase (660508)->relate: _,in,s (660491) [0]->query: name [1]
+  Annotated :
+    [0] select: vase (660508)   ◀ SELECT (start)
+    [1] relate: _,in,s (660491) [deps:[0]]  ◀ RELATE op #1: "in"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+──────────────────────────────────────────────────────────────────────────────
+  SPATIAL — WRONG: wrong object  (pool n=14,352)
+──────────────────────────────────────────────────────────────────────────────
+
+  Example 1
+  Question  : What pieces of furniture are to the left of the cabinet above the freezer?
+  GT answer : shelves
+  BLIP answer: cabinets
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : spatial   depth=4  n_relate_ops=2
+  Program   : select: refrigerator (263023)->relate: cabinet,above,s (263027) [0]->relate: furniture,to the left of,s (263034) [1]->query: name [2]
+  Annotated :
+    [0] select: refrigerator (263023)   ◀ SELECT (start)
+    [1] relate: cabinet,above,s (263027) [deps:[0]]  ◀ RELATE op #1: "above"
+    [2] relate: furniture,to the left of,s (263034) [deps:[1]]  ◀ RELATE op #2: "to the left of"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 2
+  Question  : What is in front of the giraffe that the tree is behind of?
+  GT answer : bush
+  BLIP answer: zebra
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : spatial   depth=4  n_relate_ops=2
+  Program   : select: tree (823435)->relate: giraffe,behind,o (823424) [0]->relate: _,in front of,s (823444) [1]->query: name [2]
+  Annotated :
+    [0] select: tree (823435)   ◀ SELECT (start)
+    [1] relate: giraffe,behind,o (823424) [deps:[0]]  ◀ RELATE op #1: "behind"
+    [2] relate: _,in front of,s (823444) [deps:[1]]  ◀ RELATE op #2: "in front of"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 3
+  Question  : What is on the wall behind the tennis ball?
+  GT answer : logo
+  BLIP answer: advertisement
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : spatial   depth=4  n_relate_ops=2
+  Program   : select: tennis ball (857674)->relate: wall,behind,s (857673) [0]->relate: _,on,s (857679) [1]->query: name [2]
+  Annotated :
+    [0] select: tennis ball (857674)   ◀ SELECT (start)
+    [1] relate: wall,behind,s (857673) [deps:[0]]  ◀ RELATE op #1: "behind"
+    [2] relate: _,on,s (857679) [deps:[1]]  ◀ RELATE op #2: "on"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 4
+  Question  : What piece of furniture is to the right of the couch?
+  GT answer : shelf
+  BLIP answer: table
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: couch (1278928)->relate: furniture,to the right of,s (1278937) [0]->query: name [1]
+  Annotated :
+    [0] select: couch (1278928)   ◀ SELECT (start)
+    [1] relate: furniture,to the right of,s (1278937) [deps:[0]]  ◀ RELATE op #1: "to the right of"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 5
+  Question  : What item of furniture is to the right of the laptop?
+  GT answer : couch
+  BLIP answer: doll
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: laptop (660814)->relate: furniture,to the right of,s (660840) [0]->query: name [1]
+  Annotated :
+    [0] select: laptop (660814)   ◀ SELECT (start)
+    [1] relate: furniture,to the right of,s (660840) [deps:[0]]  ◀ RELATE op #1: "to the right of"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 6
+  Question  : What kind of furniture is to the right of the cabinet the sink is above?
+  GT answer : chair
+  BLIP answer: bookshelf
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : spatial   depth=4  n_relate_ops=2
+  Program   : select: sink (4290493)->relate: cabinet,above,o (4290494) [0]->relate: furniture,to the right of,s (4290440) [1]->query: name [2]
+  Annotated :
+    [0] select: sink (4290493)   ◀ SELECT (start)
+    [1] relate: cabinet,above,o (4290494) [deps:[0]]  ◀ RELATE op #1: "above"
+    [2] relate: furniture,to the right of,s (4290440) [deps:[1]]  ◀ RELATE op #2: "to the right of"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 7
+  Question  : What is on the grill?
+  GT answer : hotdog bun
+  BLIP answer: hot dogs
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: grill (552651)->relate: _,on,s (552645) [0]->query: name [1]
+  Annotated :
+    [0] select: grill (552651)   ◀ SELECT (start)
+    [1] relate: _,on,s (552645) [deps:[0]]  ◀ RELATE op #1: "on"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 8
+  Question  : What is the gate in front of?
+  GT answer : dumpster
+  BLIP answer: building
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: gate (1552293)->relate: _,in front of,o (1552296) [0]->query: name [1]
+  Annotated :
+    [0] select: gate (1552293)   ◀ SELECT (start)
+    [1] relate: _,in front of,o (1552296) [deps:[0]]  ◀ RELATE op #1: "in front of"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 9
+  Question  : What kind of furniture is to the right of the cupboards?
+  GT answer : cabinets
+  BLIP answer: chair
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: cupboards (458924)->relate: furniture,to the right of,s (458946) [0]->query: name [1]
+  Annotated :
+    [0] select: cupboards (458924)   ◀ SELECT (start)
+    [1] relate: furniture,to the right of,s (458946) [deps:[0]]  ◀ RELATE op #1: "to the right of"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 10
+  Question  : What is on the pole?
+  GT answer : flag
+  BLIP answer: lights
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: pole (154587)->relate: _,on,s (154560) [0]->query: name [1]
+  Annotated :
+    [0] select: pole (154587)   ◀ SELECT (start)
+    [1] relate: _,on,s (154560) [deps:[0]]  ◀ RELATE op #1: "on"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 11
+  Question  : What is the vehicle in the intersection that looks gray?
+  GT answer : suv
+  BLIP answer: car
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : spatial   depth=4  n_relate_ops=1
+  Program   : select: intersection (1058682)->filter color: gray [0]->relate: vehicle,in,s (1058681) [1]->query: name [2]
+  Annotated :
+    [0] select: intersection (1058682)   ◀ SELECT (start)
+    [1] filter color: gray [deps:[0]]
+    [2] relate: vehicle,in,s (1058681) [deps:[1]]  ◀ RELATE op #2: "in"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 12
+  Question  : What is in the cupcake in the top?
+  GT answer : cookie
+  BLIP answer: chocolate
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : spatial   depth=4  n_relate_ops=1
+  Program   : select: cupcake (2965934)->filter vposition: top [0]->relate: _,in,s (2965935) [1]->query: name [2]
+  Annotated :
+    [0] select: cupcake (2965934)   ◀ SELECT (start)
+    [1] filter vposition: top [deps:[0]]
+    [2] relate: _,in,s (2965935) [deps:[1]]  ◀ RELATE op #2: "in"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+──────────────────────────────────────────────────────────────────────────────
+  SPATIAL — WRONG: compound trunc.  (pool n=519)
+──────────────────────────────────────────────────────────────────────────────
+
+  Example 1
+  Question  : What kind of device is on the right of the screen?
+  GT answer : computer mouse
+  BLIP answer: mouse
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: screen (733308)->relate: device,to the right of,s (733300) [0]->query: name [1]
+  Annotated :
+    [0] select: screen (733308)   ◀ SELECT (start)
+    [1] relate: device,to the right of,s (733300) [deps:[0]]  ◀ RELATE op #1: "to the right of"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 2
+  Question  : What device is to the right of the screen on the left side?
+  GT answer : computer mouse
+  BLIP answer: computer
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : spatial   depth=4  n_relate_ops=1
+  Program   : select: screen (4640636)->filter hposition: left [0]->relate: device,to the right of,s (4630636) [1]->query: name [2]
+  Annotated :
+    [0] select: screen (4640636)   ◀ SELECT (start)
+    [1] filter hposition: left [deps:[0]]
+    [2] relate: device,to the right of,s (4630636) [deps:[1]]  ◀ RELATE op #2: "to the right of"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 3
+  Question  : What kind of device is to the right of the computers?
+  GT answer : computer monitor
+  BLIP answer: computer
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: computers (3635564)->relate: device,to the right of,s (1542099) [0]->query: name [1]
+  Annotated :
+    [0] select: computers (3635564)   ◀ SELECT (start)
+    [1] relate: device,to the right of,s (1542099) [deps:[0]]  ◀ RELATE op #1: "to the right of"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 4
+  Question  : What animal is on top of the sticks?
+  GT answer : angry bird
+  BLIP answer: bird
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: sticks (870218)->relate: animal,on top of,s (870222) [0]->query: name [1]
+  Annotated :
+    [0] select: sticks (870218)   ◀ SELECT (start)
+    [1] relate: animal,on top of,s (870222) [deps:[0]]  ◀ RELATE op #1: "on top of"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 5
+  Question  : Who is on the sofa?
+  GT answer : man
+  BLIP answer: man and woman
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: sofa (3927168)->relate: person,on,s (3401159) [0]->query: name [1]
+  Annotated :
+    [0] select: sofa (3927168)   ◀ SELECT (start)
+    [1] relate: person,on,s (3401159) [deps:[0]]  ◀ RELATE op #1: "on"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 6
+  Question  : What is hanging on the wall?
+  GT answer : picture frame
+  BLIP answer: picture
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: wall (1036710)->relate: _,hanging on,s (1036709) [0]->query: name [1]
+  Annotated :
+    [0] select: wall (1036710)   ◀ SELECT (start)
+    [1] relate: _,hanging on,s (1036709) [deps:[0]]  ◀ RELATE op #1: "hanging on"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 7
+  Question  : What is the bag on the sidewalk?
+  GT answer : trash bag
+  BLIP answer: trash
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: sidewalk (674963)->relate: bag,on,s (674965) [0]->query: name [1]
+  Annotated :
+    [0] select: sidewalk (674963)   ◀ SELECT (start)
+    [1] relate: bag,on,s (674965) [deps:[0]]  ◀ RELATE op #1: "on"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 8
+  Question  : Which kind of furniture is to the left of the couch?
+  GT answer : end table
+  BLIP answer: table
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: couch (3748559)->relate: furniture,to the left of,s (3748563) [0]->query: name [1]
+  Annotated :
+    [0] select: couch (3748559)   ◀ SELECT (start)
+    [1] relate: furniture,to the left of,s (3748563) [deps:[0]]  ◀ RELATE op #1: "to the left of"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 9
+  Question  : What item of furniture is in the office?
+  GT answer : office chair
+  BLIP answer: chair
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: office (828887)->relate: furniture,in,s (828877) [0]->query: name [1]
+  Annotated :
+    [0] select: office (828887)   ◀ SELECT (start)
+    [1] relate: furniture,in,s (828877) [deps:[0]]  ◀ RELATE op #1: "in"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 10
+  Question  : What is the food that is on the plate?
+  GT answer : waffles
+  BLIP answer: waffles bacon eggs and waffles
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: plate (217661)->relate: baked good,on,s (217667) [0]->query: name [1]
+  Annotated :
+    [0] select: plate (217661)   ◀ SELECT (start)
+    [1] relate: baked good,on,s (217667) [deps:[0]]  ◀ RELATE op #1: "on"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 11
+  Question  : Which kind of furniture is the lamp on?
+  GT answer : end table
+  BLIP answer: table
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: lamp (1965505)->relate: furniture,on,o (3760045) [0]->query: name [1]
+  Annotated :
+    [0] select: lamp (1965505)   ◀ SELECT (start)
+    [1] relate: furniture,on,o (3760045) [deps:[0]]  ◀ RELATE op #1: "on"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 12
+  Question  : What kind of fast food is on the table?
+  GT answer : pizza pie
+  BLIP answer: pizza
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : spatial   depth=3  n_relate_ops=1
+  Program   : select: table (3048075)->relate: fast food,on,s (3048074) [0]->query: name [1]
+  Annotated :
+    [0] select: table (3048075)   ◀ SELECT (start)
+    [1] relate: fast food,on,s (3048074) [deps:[0]]  ◀ RELATE op #1: "on"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+──────────────────────────────────────────────────────────────────────────────
+  ACTION  — CORRECT predictions  (pool n=5,652)
+──────────────────────────────────────────────────────────────────────────────
+
+  Example 1
+  Question  : Who is riding the horse?
+  GT answer : woman
+  BLIP answer: woman
+  Result    : ✓ CORRECT
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: horse (1263546)->relate: person,riding,s (1263545) [0]->query: name [1]
+  Annotated :
+    [0] select: horse (1263546)   ◀ SELECT (start)
+    [1] relate: person,riding,s (1263545) [deps:[0]]  ◀ RELATE op #1: "riding"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 2
+  Question  : Who is wearing a shirt?
+  GT answer : boy
+  BLIP answer: boy
+  Result    : ✓ CORRECT
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: shirt (958021)->relate: person,wearing,s (958019) [0]->query: name [1]
+  Annotated :
+    [0] select: shirt (958021)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (958019) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 3
+  Question  : What is the person that is walking holding?
+  GT answer : surfboard
+  BLIP answer: surfboard
+  Result    : ✓ CORRECT
+  Rel type  : action   depth=4  n_relate_ops=1
+  Program   : select: person (1258901)->filter pose: walking [0]->relate: _,holding,o (1258899) [1]->query: name [2]
+  Annotated :
+    [0] select: person (1258901)   ◀ SELECT (start)
+    [1] filter pose: walking [deps:[0]]
+    [2] relate: _,holding,o (1258899) [deps:[1]]  ◀ RELATE op #2: "holding"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 4
+  Question  : What is the man to the right of the car wearing?
+  GT answer : hat
+  BLIP answer: hat
+  Result    : ✓ CORRECT
+  Rel type  : action   depth=4  n_relate_ops=2
+  Program   : select: car (725396)->relate: man,to the right of,s (725386) [0]->relate: _,wearing,o (725387) [1]->query: name [2]
+  Annotated :
+    [0] select: car (725396)   ◀ SELECT (start)
+    [1] relate: man,to the right of,s (725386) [deps:[0]]  ◀ RELATE op #1: "to the right of"
+    [2] relate: _,wearing,o (725387) [deps:[1]]  ◀ RELATE op #2: "wearing"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 5
+  Question  : What is the man looking at?
+  GT answer : laptop
+  BLIP answer: laptop
+  Result    : ✓ CORRECT
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: man (1680342)->relate: _,looking at,o (1680343) [0]->query: name [1]
+  Annotated :
+    [0] select: man (1680342)   ◀ SELECT (start)
+    [1] relate: _,looking at,o (1680343) [deps:[0]]  ◀ RELATE op #1: "looking at"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 6
+  Question  : Who holds the umbrella in the top part of the photo?
+  GT answer : woman
+  BLIP answer: woman
+  Result    : ✓ CORRECT
+  Rel type  : action   depth=4  n_relate_ops=1
+  Program   : select: umbrella (905081)->filter vposition: top [0]->relate: person,holding,s (905062) [1]->query: name [2]
+  Annotated :
+    [0] select: umbrella (905081)   ◀ SELECT (start)
+    [1] filter vposition: top [deps:[0]]
+    [2] relate: person,holding,s (905062) [deps:[1]]  ◀ RELATE op #2: "holding"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 7
+  Question  : Who is holding the racket?
+  GT answer : woman
+  BLIP answer: woman
+  Result    : ✓ CORRECT
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: racket (2257616)->relate: person,holding,s (1901092) [0]->query: name [1]
+  Annotated :
+    [0] select: racket (2257616)   ◀ SELECT (start)
+    [1] relate: person,holding,s (1901092) [deps:[0]]  ◀ RELATE op #1: "holding"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 8
+  Question  : Who is wearing a jacket?
+  GT answer : snowboarder
+  BLIP answer: snowboarder
+  Result    : ✓ CORRECT
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: jacket (1109455)->relate: person,wearing,s (1109446) [0]->query: name [1]
+  Annotated :
+    [0] select: jacket (1109455)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (1109446) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 9
+  Question  : What is this bowl holding?
+  GT answer : soup
+  BLIP answer: soup
+  Result    : ✓ CORRECT
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: bowl (468824)->relate: _,holding,o (468811) [0]->query: name [1]
+  Annotated :
+    [0] select: bowl (468824)   ◀ SELECT (start)
+    [1] relate: _,holding,o (468811) [deps:[0]]  ◀ RELATE op #1: "holding"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 10
+  Question  : How is the bird that the man to the right of the pot is holding called?
+  GT answer : parrot
+  BLIP answer: parrot
+  Result    : ✓ CORRECT
+  Rel type  : action   depth=4  n_relate_ops=2
+  Program   : select: pot (1555081)->relate: man,to the right of,s (3647699) [0]->relate: bird,holding,o (3647695) [1]->query: name [2]
+  Annotated :
+    [0] select: pot (1555081)   ◀ SELECT (start)
+    [1] relate: man,to the right of,s (3647699) [deps:[0]]  ◀ RELATE op #1: "to the right of"
+    [2] relate: bird,holding,o (3647695) [deps:[1]]  ◀ RELATE op #2: "holding"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 11
+  Question  : Who is wearing the eye glasses?
+  GT answer : boy
+  BLIP answer: boy
+  Result    : ✓ CORRECT
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: eye glasses (2407508)->relate: person,wearing,s (3605019) [0]->query: name [1]
+  Annotated :
+    [0] select: eye glasses (2407508)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (3605019) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 12
+  Question  : What is sitting under the large tree?
+  GT answer : bench
+  BLIP answer: bench
+  Result    : ✓ CORRECT
+  Rel type  : action   depth=4  n_relate_ops=1
+  Program   : select: tree (2898902)->filter size: large [0]->relate: _,sitting under,s (3117950) [1]->query: name [2]
+  Annotated :
+    [0] select: tree (2898902)   ◀ SELECT (start)
+    [1] filter size: large [deps:[0]]
+    [2] relate: _,sitting under,s (3117950) [deps:[1]]  ◀ RELATE op #2: "sitting under"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+──────────────────────────────────────────────────────────────────────────────
+  ACTION  — WRONG: wrong object  (pool n=6,645)
+──────────────────────────────────────────────────────────────────────────────
+
+  Example 1
+  Question  : What is the man holding?
+  GT answer : racket
+  BLIP answer: tennis racket
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: man (707432)->relate: _,holding,o (707437) [0]->query: name [1]
+  Annotated :
+    [0] select: man (707432)   ◀ SELECT (start)
+    [1] relate: _,holding,o (707437) [deps:[0]]  ◀ RELATE op #1: "holding"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 2
+  Question  : Who is talking on the phone?
+  GT answer : boy
+  BLIP answer: man
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: phone (3166308)->relate: person,talking on,s (2436120) [0]->query: name [1]
+  Annotated :
+    [0] select: phone (3166308)   ◀ SELECT (start)
+    [1] relate: person,talking on,s (2436120) [deps:[0]]  ◀ RELATE op #1: "talking on"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 3
+  Question  : Who is wearing a scarf?
+  GT answer : man
+  BLIP answer: no one
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: scarf (2055238)->relate: person,wearing,s (2521605) [0]->query: name [1]
+  Annotated :
+    [0] select: scarf (2055238)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (2521605) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 4
+  Question  : What is the woman wearing?
+  GT answer : glasses
+  BLIP answer: tank top
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: woman (865981)->relate: _,wearing,o (865984) [0]->query: name [1]
+  Annotated :
+    [0] select: woman (865981)   ◀ SELECT (start)
+    [1] relate: _,wearing,o (865984) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 5
+  Question  : What is the tennis racket that is to the right of the tennis ball leaning on?
+  GT answer : fence
+  BLIP answer: bag
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : action   depth=4  n_relate_ops=2
+  Program   : select: tennis ball (1102815)->relate: racket,to the right of,s (1102812) [0]->relate: _,leaning on,o (1102817) [1]->query: name [2]
+  Annotated :
+    [0] select: tennis ball (1102815)   ◀ SELECT (start)
+    [1] relate: racket,to the right of,s (1102812) [deps:[0]]  ◀ RELATE op #1: "to the right of"
+    [2] relate: _,leaning on,o (1102817) [deps:[1]]  ◀ RELATE op #2: "leaning on"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 6
+  Question  : Who is wearing a hat?
+  GT answer : people
+  BLIP answer: man
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: hat (666708)->relate: person,wearing,s (666730) [0]->query: name [1]
+  Annotated :
+    [0] select: hat (666708)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (666730) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 7
+  Question  : What is the man with the backpack holding?
+  GT answer : cell phone
+  BLIP answer: bag
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : action   depth=4  n_relate_ops=2
+  Program   : select: backpack (2353261)->relate: man,with,s (2353260) [0]->relate: _,holding,o (3854431) [1]->query: name [2]
+  Annotated :
+    [0] select: backpack (2353261)   ◀ SELECT (start)
+    [1] relate: man,with,s (2353260) [deps:[0]]  ◀ RELATE op #1: "with"
+    [2] relate: _,holding,o (3854431) [deps:[1]]  ◀ RELATE op #2: "holding"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 8
+  Question  : Who is wearing trousers?
+  GT answer : woman
+  BLIP answer: man
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: pants (559034)->relate: person,wearing,s (559025) [0]->query: name [1]
+  Annotated :
+    [0] select: pants (559034)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (559025) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 9
+  Question  : The girl to the right of the food is holding what?
+  GT answer : pan
+  BLIP answer: pizza
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : action   depth=4  n_relate_ops=2
+  Program   : select: food (4463917)->relate: girl,to the right of,s (4463935) [0]->relate: _,holding,o (4463921) [1]->query: name [2]
+  Annotated :
+    [0] select: food (4463917)   ◀ SELECT (start)
+    [1] relate: girl,to the right of,s (4463935) [deps:[0]]  ◀ RELATE op #1: "to the right of"
+    [2] relate: _,holding,o (4463921) [deps:[1]]  ◀ RELATE op #2: "holding"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 10
+  Question  : Who is carrying the bag?
+  GT answer : lady
+  BLIP answer: woman
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: bag (3229402)->relate: person,carrying,s (2254387) [0]->query: name [1]
+  Annotated :
+    [0] select: bag (3229402)   ◀ SELECT (start)
+    [1] relate: person,carrying,s (2254387) [deps:[0]]  ◀ RELATE op #1: "carrying"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 11
+  Question  : Who is sitting on the bench that is to the left of the train?
+  GT answer : man
+  BLIP answer: no one
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : action   depth=4  n_relate_ops=2
+  Program   : select: train (1215931)->relate: bench,to the left of,s (1215945) [0]->relate: person,sitting on,s (1215944) [1]->query: name [2]
+  Annotated :
+    [0] select: train (1215931)   ◀ SELECT (start)
+    [1] relate: bench,to the left of,s (1215945) [deps:[0]]  ◀ RELATE op #1: "to the left of"
+    [2] relate: person,sitting on,s (1215944) [deps:[1]]  ◀ RELATE op #2: "sitting on"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 12
+  Question  : What is the TV to the right of the carrots sitting on?
+  GT answer : shelf
+  BLIP answer: fridge
+  Result    : ✗ WRONG  [wrong_object]
+  Rel type  : action   depth=4  n_relate_ops=2
+  Program   : select: carrots (4507462)->relate: television,to the right of,s (4507399) [0]->relate: _,sitting on,o (4507438) [1]->query: name [2]
+  Annotated :
+    [0] select: carrots (4507462)   ◀ SELECT (start)
+    [1] relate: television,to the right of,s (4507399) [deps:[0]]  ◀ RELATE op #1: "to the right of"
+    [2] relate: _,sitting on,o (4507438) [deps:[1]]  ◀ RELATE op #2: "sitting on"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+──────────────────────────────────────────────────────────────────────────────
+  ACTION  — WRONG: person genericity
+  (BLIP says 'man/woman/person' instead of role-specific GT)  (pool n=331)
+──────────────────────────────────────────────────────────────────────────────
+
+  Example 1
+  Question  : Who is walking next to the building?
+  GT answer : couple
+  BLIP answer: people
+  Result    : ✗ WRONG  [person_genericity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: building (4152434)->relate: person,walking next to,s (4152452) [0]->query: name [1]
+  Annotated :
+    [0] select: building (4152434)   ◀ SELECT (start)
+    [1] relate: person,walking next to,s (4152452) [deps:[0]]  ◀ RELATE op #1: "walking next to"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 2
+  Question  : Who is wearing a jacket?
+  GT answer : toddler
+  BLIP answer: boy
+  Result    : ✗ WRONG  [person_genericity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: jacket (179496)->relate: person,wearing,s (179488) [0]->query: name [1]
+  Annotated :
+    [0] select: jacket (179496)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (179488) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 3
+  Question  : What does the trunk carry?
+  GT answer : grass
+  BLIP answer: people
+  Result    : ✗ WRONG  [person_genericity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: trunk (884398)->relate: _,carrying,o (884419) [0]->query: name [1]
+  Annotated :
+    [0] select: trunk (884398)   ◀ SELECT (start)
+    [1] relate: _,carrying,o (884419) [deps:[0]]  ◀ RELATE op #1: "carrying"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 4
+  Question  : Who is wearing a hat?
+  GT answer : player
+  BLIP answer: man
+  Result    : ✗ WRONG  [person_genericity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: hat (1203737)->relate: person,wearing,s (1203744) [0]->query: name [1]
+  Annotated :
+    [0] select: hat (1203737)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (1203744) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 5
+  Question  : What is wearing the shirt?
+  GT answer : jeans
+  BLIP answer: man
+  Result    : ✗ WRONG  [person_genericity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: shirt (4261684)->relate: _,wearing,s (4261683) [0]->query: name [1]
+  Annotated :
+    [0] select: shirt (4261684)   ◀ SELECT (start)
+    [1] relate: _,wearing,s (4261683) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 6
+  Question  : What is wearing a helmet?
+  GT answer : fence
+  BLIP answer: no one
+  Result    : ✗ WRONG  [person_genericity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: helmet (3484429)->relate: _,wearing,s (3484427) [0]->query: name [1]
+  Annotated :
+    [0] select: helmet (3484429)   ◀ SELECT (start)
+    [1] relate: _,wearing,s (3484427) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 7
+  Question  : Who is wearing the watch?
+  GT answer : skater
+  BLIP answer: man
+  Result    : ✗ WRONG  [person_genericity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: watch (254728)->relate: person,wearing,s (254714) [0]->query: name [1]
+  Annotated :
+    [0] select: watch (254728)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (254714) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 8
+  Question  : Who is wearing the jeans?
+  GT answer : mother
+  BLIP answer: woman
+  Result    : ✗ WRONG  [person_genericity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: jeans (478325)->relate: person,wearing,s (478320) [0]->query: name [1]
+  Annotated :
+    [0] select: jeans (478325)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (478320) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 9
+  Question  : What is the umbrella to the right of the person resting on?
+  GT answer : roadway
+  BLIP answer: man
+  Result    : ✗ WRONG  [person_genericity]
+  Rel type  : action   depth=4  n_relate_ops=2
+  Program   : select: person (1100539)->relate: umbrella,to the right of,s (1100521) [0]->relate: _,resting on,o (1100529) [1]->query: name [2]
+  Annotated :
+    [0] select: person (1100539)   ◀ SELECT (start)
+    [1] relate: umbrella,to the right of,s (1100521) [deps:[0]]  ◀ RELATE op #1: "to the right of"
+    [2] relate: _,resting on,o (1100529) [deps:[1]]  ◀ RELATE op #2: "resting on"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 10
+  Question  : What is holding the weapon in the top of the picture?
+  GT answer : statue
+  BLIP answer: man
+  Result    : ✗ WRONG  [person_genericity]
+  Rel type  : action   depth=4  n_relate_ops=1
+  Program   : select: weapon (486473)->filter vposition: top [0]->relate: _,holding,s (486458) [1]->query: name [2]
+  Annotated :
+    [0] select: weapon (486473)   ◀ SELECT (start)
+    [1] filter vposition: top [deps:[0]]
+    [2] relate: _,holding,s (486458) [deps:[1]]  ◀ RELATE op #2: "holding"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 11
+  Question  : Who is holding the snowboard the bag is to the right of?
+  GT answer : skier
+  BLIP answer: woman
+  Result    : ✗ WRONG  [person_genericity]
+  Rel type  : action   depth=4  n_relate_ops=2
+  Program   : select: bag (2622528)->relate: snowboard,to the right of,o (3331273) [0]->relate: person,holding,s (3905321) [1]->query: name [2]
+  Annotated :
+    [0] select: bag (2622528)   ◀ SELECT (start)
+    [1] relate: snowboard,to the right of,o (3331273) [deps:[0]]  ◀ RELATE op #1: "to the right of"
+    [2] relate: person,holding,s (3905321) [deps:[1]]  ◀ RELATE op #2: "holding"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 12
+  Question  : Who is wearing the pants?
+  GT answer : player
+  BLIP answer: man
+  Result    : ✗ WRONG  [person_genericity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: pants (1014189)->relate: person,wearing,s (1014179) [0]->query: name [1]
+  Annotated :
+    [0] select: pants (1014189)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (1014179) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+──────────────────────────────────────────────────────────────────────────────
+  ACTION  — WRONG: person specificity
+  (GT is generic 'man/woman', BLIP gives more specific role)  (pool n=953)
+──────────────────────────────────────────────────────────────────────────────
+
+  Example 1
+  Question  : Who wears the glove?
+  GT answer : man
+  BLIP answer: cyclist
+  Result    : ✗ WRONG  [person_specificity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: glove (4686992)->relate: person,wearing,s (4686991) [0]->query: name [1]
+  Annotated :
+    [0] select: glove (4686992)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (4686991) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 2
+  Question  : Who is wearing a cap?
+  GT answer : people
+  BLIP answer: students
+  Result    : ✗ WRONG  [person_specificity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: cap (2338433)->relate: person,wearing,s (3748613) [0]->query: name [1]
+  Annotated :
+    [0] select: cap (2338433)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (3748613) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 3
+  Question  : Who is wearing the hat?
+  GT answer : woman
+  BLIP answer: skier
+  Result    : ✗ WRONG  [person_specificity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: hat (1236644)->relate: person,wearing,s (1236641) [0]->query: name [1]
+  Annotated :
+    [0] select: hat (1236644)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (1236641) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 4
+  Question  : Who is wearing the gloves?
+  GT answer : girl
+  BLIP answer: goalie
+  Result    : ✗ WRONG  [person_specificity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: gloves (1184098)->relate: person,wearing,s (1184091) [0]->query: name [1]
+  Annotated :
+    [0] select: gloves (1184098)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (1184091) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 5
+  Question  : Who is wearing gloves?
+  GT answer : woman
+  BLIP answer: skier
+  Result    : ✗ WRONG  [person_specificity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: gloves (737596)->relate: person,wearing,s (737586) [0]->query: name [1]
+  Annotated :
+    [0] select: gloves (737596)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (737586) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 6
+  Question  : Who is wearing the goggles?
+  GT answer : woman
+  BLIP answer: skier
+  Result    : ✗ WRONG  [person_specificity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: goggles (1302532)->relate: person,wearing,s (1302530) [0]->query: name [1]
+  Annotated :
+    [0] select: goggles (1302532)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (1302530) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 7
+  Question  : Who is wearing the jacket?
+  GT answer : man
+  BLIP answer: skier
+  Result    : ✗ WRONG  [person_specificity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: jacket (366375)->relate: person,wearing,s (3810061) [0]->query: name [1]
+  Annotated :
+    [0] select: jacket (366375)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (3810061) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 8
+  Question  : Who is wearing the cap?
+  GT answer : woman
+  BLIP answer: skier
+  Result    : ✗ WRONG  [person_specificity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: cap (571259)->relate: person,wearing,s (571254) [0]->query: name [1]
+  Annotated :
+    [0] select: cap (571259)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (571254) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 9
+  Question  : Who is standing beside the person that is wearing a dress?
+  GT answer : man
+  BLIP answer: woman in white dress
+  Result    : ✗ WRONG  [person_specificity]
+  Rel type  : action   depth=4  n_relate_ops=2
+  Program   : select: dress (1034798)->relate: person,wearing,s (1034797) [0]->relate: person,standing beside,s (1034816) [1]->query: name [2]
+  Annotated :
+    [0] select: dress (1034798)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (1034797) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] relate: person,standing beside,s (1034816) [deps:[1]]  ◀ RELATE op #2: "standing beside"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 10
+  Question  : Who is sitting at the table?
+  GT answer : boy
+  BLIP answer: kids
+  Result    : ✗ WRONG  [person_specificity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: table (958016)->relate: person,sitting at,s (958019) [0]->query: name [1]
+  Annotated :
+    [0] select: table (958016)   ◀ SELECT (start)
+    [1] relate: person,sitting at,s (958019) [deps:[0]]  ◀ RELATE op #1: "sitting at"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 11
+  Question  : Who is wearing an outfit?
+  GT answer : man
+  BLIP answer: skier
+  Result    : ✗ WRONG  [person_specificity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: outfit (3128399)->relate: person,wearing,s (3267649) [0]->query: name [1]
+  Annotated :
+    [0] select: outfit (3128399)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (3267649) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 12
+  Question  : Who is wearing the snowsuit?
+  GT answer : child
+  BLIP answer: skiers
+  Result    : ✗ WRONG  [person_specificity]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: snowsuit (154490)->relate: person,wearing,s (154484) [0]->query: name [1]
+  Annotated :
+    [0] select: snowsuit (154490)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (154484) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+──────────────────────────────────────────────────────────────────────────────
+  ACTION  — WRONG: compound trunc.  (pool n=328)
+──────────────────────────────────────────────────────────────────────────────
+
+  Example 1
+  Question  : Who is wearing a necklace?
+  GT answer : girl
+  BLIP answer: girl on right
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: necklace (496844)->relate: person,wearing,s (496843) [0]->query: name [1]
+  Annotated :
+    [0] select: necklace (496844)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (496843) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 2
+  Question  : Who is holding the food?
+  GT answer : man
+  BLIP answer: man in red shirt
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: food (838202)->relate: person,holding,s (838194) [0]->query: name [1]
+  Annotated :
+    [0] select: food (838202)   ◀ SELECT (start)
+    [1] relate: person,holding,s (838194) [deps:[0]]  ◀ RELATE op #1: "holding"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 3
+  Question  : Who is wearing the wristband?
+  GT answer : boy
+  BLIP answer: boy in blue shirt
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: wristband (471129)->relate: person,wearing,s (471127) [0]->query: name [1]
+  Annotated :
+    [0] select: wristband (471129)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (471127) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 4
+  Question  : What item of furniture does the computer sit on?
+  GT answer : computer desk
+  BLIP answer: desk
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: computer (4530071)->relate: furniture,sitting on,o (4530093) [0]->query: name [1]
+  Annotated :
+    [0] select: computer (4530071)   ◀ SELECT (start)
+    [1] relate: furniture,sitting on,o (4530093) [deps:[0]]  ◀ RELATE op #1: "sitting on"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 5
+  Question  : What is the man to the right of the glasses holding?
+  GT answer : cell phone
+  BLIP answer: phone
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : action   depth=4  n_relate_ops=2
+  Program   : select: glasses (2101749)->relate: man,to the right of,s (2374689) [0]->relate: _,holding,o (1756060) [1]->query: name [2]
+  Annotated :
+    [0] select: glasses (2101749)   ◀ SELECT (start)
+    [1] relate: man,to the right of,s (2374689) [deps:[0]]  ◀ RELATE op #1: "to the right of"
+    [2] relate: _,holding,o (1756060) [deps:[1]]  ◀ RELATE op #2: "holding"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 6
+  Question  : What is the woman holding?
+  GT answer : electric toothbrush
+  BLIP answer: toothbrush
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: woman (670071)->relate: _,holding,o (670072) [0]->query: name [1]
+  Annotated :
+    [0] select: woman (670071)   ◀ SELECT (start)
+    [1] relate: _,holding,o (670072) [deps:[0]]  ◀ RELATE op #1: "holding"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 7
+  Question  : Who is wearing the cap?
+  GT answer : man
+  BLIP answer: man in blue
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: cap (175377)->relate: person,wearing,s (175376) [0]->query: name [1]
+  Annotated :
+    [0] select: cap (175377)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (175376) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 8
+  Question  : Who is wearing pants?
+  GT answer : girl
+  BLIP answer: girl on left
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: pants (1360164)->relate: person,wearing,s (1360140) [0]->query: name [1]
+  Annotated :
+    [0] select: pants (1360164)   ◀ SELECT (start)
+    [1] relate: person,wearing,s (1360140) [deps:[0]]  ◀ RELATE op #1: "wearing"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 9
+  Question  : What is the train in front of the trees riding on?
+  GT answer : train tracks
+  BLIP answer: tracks
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : action   depth=4  n_relate_ops=2
+  Program   : select: trees (538498)->relate: train,in front of,s (538489) [0]->relate: _,riding on,o (538490) [1]->query: name [2]
+  Annotated :
+    [0] select: trees (538498)   ◀ SELECT (start)
+    [1] relate: train,in front of,s (538489) [deps:[0]]  ◀ RELATE op #1: "in front of"
+    [2] relate: _,riding on,o (538490) [deps:[1]]  ◀ RELATE op #2: "riding on"
+    [3] query: name [deps:[2]]  ◀ QUERY (final answer)
+
+  Example 10
+  Question  : What's the man holding?
+  GT answer : wine glass
+  BLIP answer: wine
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: man (877859)->relate: _,holding,o (877871) [0]->query: name [1]
+  Annotated :
+    [0] select: man (877859)   ◀ SELECT (start)
+    [1] relate: _,holding,o (877871) [deps:[0]]  ◀ RELATE op #1: "holding"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 11
+  Question  : What does he hold?
+  GT answer : cell phone
+  BLIP answer: phone
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: he (4497513)->relate: _,holding,o (4497514) [0]->query: name [1]
+  Annotated :
+    [0] select: he (4497513)   ◀ SELECT (start)
+    [1] relate: _,holding,o (4497514) [deps:[0]]  ◀ RELATE op #1: "holding"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)
+
+  Example 12
+  Question  : What is sitting on the table?
+  GT answer : remote control
+  BLIP answer: remote
+  Result    : ✗ WRONG  [compound_truncation]
+  Rel type  : action   depth=3  n_relate_ops=1
+  Program   : select: table (143294)->relate: _,sitting on,s (143293) [0]->query: name [1]
+  Annotated :
+    [0] select: table (143294)   ◀ SELECT (start)
+    [1] relate: _,sitting on,s (143293) [deps:[0]]  ◀ RELATE op #1: "sitting on"
+    [2] query: name [deps:[1]]  ◀ QUERY (final answer)

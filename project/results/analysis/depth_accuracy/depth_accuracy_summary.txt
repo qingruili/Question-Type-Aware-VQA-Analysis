@@ -1,0 +1,65 @@
+======================================================================
+ACCURACY VS LOGIC DEPTH — KEY NUMBERS
+(normalized exact-match, rules 1-6)
+======================================================================
+
+── OVERALL (all types pooled) ──────────────────────────────
+  depth         n     BLIP     ViLT      gap  note
+-----------------------------------------------------------------
+      2    36,743    0.622    0.584   +0.039  
+      3    62,810    0.501    0.475   +0.026  
+      4    17,875    0.512    0.483   +0.029  
+      5    11,036    0.599    0.551   +0.047  ⚠ 83% logical×obj (binary yes/no) — inflated
+      6        85    0.459    0.494   -0.035  mostly logical×obj compound questions
+      7     3,506    0.307    0.348   -0.041  mostly logical×obj compound questions
+      8         6    0.667    0.333   +0.333  mostly logical×obj compound questions
+      9         1    0.000    0.000   +0.000  mostly logical×obj compound questions
+
+── PER STRUCTURAL TYPE ─────────────────────────────────────
+
+  QUERY
+  depth         n     BLIP     ViLT      gap
+  ---------------------------------------------
+      2    14,821    0.502    0.478   +0.024
+      3    42,149    0.444    0.424   +0.020
+      4    10,891    0.387    0.366   +0.021
+      5       306    0.395    0.314   +0.082
+
+  VERIFY
+  depth         n     BLIP     ViLT      gap
+  ---------------------------------------------
+      2    12,905    0.732    0.708   +0.024
+      3     9,559    0.721    0.678   +0.043
+      4     4,805    0.698    0.659   +0.039
+      5       144    0.632    0.625   +0.007  (sparse)
+
+  LOGICAL
+  depth         n     BLIP     ViLT      gap
+  ---------------------------------------------
+      4     1,913    0.742    0.700   +0.042
+      5    10,585    0.604    0.557   +0.047
+      6        85    0.459    0.494   -0.035  (sparse)
+      7     3,506    0.307    0.348   -0.041
+      8         6    0.667    0.333   +0.333  (sparse)
+      9         1    0.000    0.000   +0.000  (sparse)
+
+  CHOOSE
+  depth         n     BLIP     ViLT      gap
+  ---------------------------------------------
+      2     8,548    0.666    0.581   +0.085
+      3     7,414    0.560    0.506   +0.055
+      4       266    0.639    0.590   +0.049
+      5         1    1.000    1.000   +0.000  (sparse)
+
+  COMPARE
+  depth         n     BLIP     ViLT      gap
+  ---------------------------------------------
+      2       469    0.642    0.582   +0.060
+      3     3,688    0.466    0.476   -0.009
+
+── KEY OBSERVATIONS ────────────────────────────────────────
+1. DEPTH-5 ARTEFACT: overall accuracy at depth-5 (0.599 BLIP) is HIGHER than depth-3 (0.501 BLIP). This is not because models handle complex questions better — it is because 83% of depth-5 questions are logical×obj (always binary yes/no), which inflates accuracy.
+2. VILT > BLIP AT DEPTH 6: ViLT (0.494) leads BLIP (0.459) at depth 6. These are all logical×obj compound questions (AND/OR of two sub-questions). BLIP may over-generate at high complexity; ViLT's classifier is less prone to surface-form errors on binary questions.
+3. LOGICAL BIMODAL: logical questions split at depth-5 (n=10,585, BLIP=0.604) and depth-7 (n=3,506, BLIP=0.307). Depth-5 = single relate→verify chain; depth-7 = compound AND/OR of two sub-questions. Both models drop substantially at depth-7.
+4. VERIFY IS MOSTLY FLAT: BLIP accuracy ranges only 0.100 across depths 2–5 for verify questions. Binary yes/no format dominates; depth adds little difficulty.
+5. QUERY DECLINES WITH DEPTH: BLIP accuracy drops from 0.502 (depth 2) to 0.395 (depth 5), a decline of 0.106. Longer reasoning chains genuinely hurt open-vocabulary retrieval.
