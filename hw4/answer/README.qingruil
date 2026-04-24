@@ -1,5 +1,0 @@
-Implement end-to-end prefix-tuning pipeline
-Implement deterministic beam search 
-Implement prefix projection 
-Implement virtual tokens = 10
-Edit maximum generation length
