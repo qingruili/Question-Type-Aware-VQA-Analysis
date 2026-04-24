@@ -1,4 +1,0 @@
-1. Implemented character-level noise injection for robustness - Qingrui Li
-2. Built multi-layer classification head with expansion architecture - Qingrui Li
-3. Averaged multiple BERT layers for richer representations - Qingrui Li
-4. Used separate optimizers for encoder and head - Qingrui Li
