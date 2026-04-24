@@ -8,4 +8,4 @@ A fine-grained analysis of `Salesforce/blip-vqa-base` on the GQA balanced valida
 2. **Reasoning demand** — relational/spatial questions lag attribute questions by 7.8 pp even after controlling for answer entropy.
 3. **Visual grounding quality** — perceptual attributes (color, material) degrade sharply with small objects; spatial position does not, revealing a conceptual bottleneck.
 
-See [`src/README.md`](src/README.md) for full setup and reproduction instructions.
+See [`project/README.md`](project/README.md) for full setup and reproduction instructions.
