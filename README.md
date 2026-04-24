@@ -1,4 +1,4 @@
-## [Step2: Question-Type-Aware Evaluation of Vision-Language Models for VQA](project/)
+# [Step2: Question-Type-Aware Evaluation of Vision-Language Models for VQA]
 
 ### [Link to Step 1](https://github.com/qingruili/PEFT-Methods-for-BLIP-2-VQA)
 
