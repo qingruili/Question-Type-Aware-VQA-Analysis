@@ -1,6 +1,6 @@
-## [Project — Question-Type-Aware Evaluation of Vision-Language Models for VQA](project/)
+## [Step2: Question-Type-Aware Evaluation of Vision-Language Models for VQA](project/)
 
- **Members:** Sophia Yang (xya134) · Qingrui Li (qingruil)
+### [Link to Step 1](https://github.com/qingruili/PEFT-Methods-for-BLIP-2-VQA)
 
 A fine-grained analysis of `Salesforce/blip-vqa-base` on the GQA balanced validation split (132,062 questions). Using GQA's two-axis taxonomy — **structural type** (query, verify, logical, choose, compare) × **semantic type** (rel, attr, obj, cat, global) — we identify three orthogonal accuracy drivers:
 
